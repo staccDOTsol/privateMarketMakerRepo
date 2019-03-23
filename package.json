@@ -1,0 +1,39 @@
+{
+  "author": {
+    "name": "Jarett Dunn",
+    "email": "jarettrsdunn@gmail.com"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "binance-api-node": "*",
+    "bit_mex_api": "*",
+    "bitfinex-api-node": "^2.0.0-beta.1",
+    "bitsharesjs": "^1.8.3",
+    "body-parser": "^1.18.3",
+    "ccxt": "*",
+    "co": "4.6.0",
+    "dotenv": "*",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "hitbtc-api": "^3.0.2",
+    "moment": "*",
+    "mongodb": "*",
+    "path": "*",
+    "poloniex-api-node": "^1.9.0",
+    "request": "^2.88.0",
+    "serve-favicon": "*",
+    "socks-proxy-agent": "*",
+    "trendyways": "^0.4.2",
+    "underscore": "*"
+  },
+  "scripts": {
+    "start": "node hitbtc.js"
+  },
+  "deprecated": false,
+  "description": "Engine for Quoinex noticing skillz",
+  "engines": {
+    "node": ">=0.6"
+  },
+  "name": "qouinexnoticer",
+  "version": "1.0.4"
+}
