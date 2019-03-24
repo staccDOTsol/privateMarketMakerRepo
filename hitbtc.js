@@ -1,6 +1,6 @@
 const HitBTC = require('hitbtc-api').default
-let key = "d236e08c5eb56e8c33b6eb4708804aa8";
-let secret = "e9bc8024b9fae13f25f2947c1cbcb0e2";
+let key = "";
+let secret = "";
 const restClient = new HitBTC({ key, secret, isDemo: false });
 
 let buys = []
