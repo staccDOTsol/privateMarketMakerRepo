@@ -199,7 +199,8 @@
 <script src="https://code.highcharts.com/stock/highstock.js"></script>
 <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
-The goal of this bot isn't to profit: it's to show off that there would be profits if we eliminated the 0.1% trading fee, or effect a market maker rebate of -0.01% or up to -0.1%. Imagine this chart as you're watching it without the steep falls after some of the green (buying) lines: those drops are fees. Imagine it with bigger climbs on some of the red (selling) lines: sales without fees. <a href="https://medium.com/@jarettrsdunn/binance-hitbtc-etc-market-maker-pitch-how-to-get-rich-online-2988c1d328ac">Read More Here.</a> <br> <br> # current orders: <div id = 'numOrders'></div> Buy orders: <div id = 'buyOrders'></div> Sell orders: <div id = 'sellOrders'></div>  <br> # recent trades: <div id = 'numTrades'></div><br>All balances: <div id = "balances"></div>Oldest trade in recent memory: <div id = 'least'></div> and btcVol in recent memory: <div id='btcVol'></div><br>
+The goal of this bot isn't to profit: it's to show off that there would be profits if we eliminated the 0.1% trading fee, or effect a market maker rebate of -0.01% or up to -0.1%. Imagine this chart as you're watching it without the steep falls after some of the green (buying) lines: those drops are fees. Imagine it with bigger climbs on some of the red (selling) lines: sales without fees. <a href="https://medium.com/@jarettrsdunn/binance-hitbtc-etc-market-maker-pitch-how-to-get-rich-online-2988c1d328ac">Read More Here.</a> <br> <br> # current orders: <div id = 'numOrders'></div> Buy orders: <div id = 'buyOrders'></div> Sell orders: <div id = 'sellOrders'></div>  <br> # recent trades: <div id = 'numTrades'></div><br>All balances: <div id = "balances"></div><br>Oldest trade in recent memory: <div id = 'least'></div> and btcVol in recent memory: <div id='btcVol'></div><br>Hours since oldest trade: <div id ='hours'></div><br>Est. daily vol: <div id="dailyvol"></div><br><br>Est. 1 BTC invested: <div id="1btc"></div>Est. 5 BTC invested: <div id="5btc"></div>Est. 10 BTC invested: <div id="10btc"></div>Est. 20 BTC invested: <div id="20btc"></div>
+
 <div id="container0" style="height: 500px; min-width: 310px"></div>
 <div id="container" style="height: 500px; min-width: 310px"></div>
 <div id="container3" style="height: 500px; min-width: 310px"></div>
@@ -236,14 +237,22 @@ The goal of this bot isn't to profit: it's to show off that there would be profi
             $('#sellOrders').html(jsondata.sellOrders)
                 console.log(jsondata);
 				console.log(new Date().getTime());
-				var d = new Date().getTime();
-				total.push([d, jsondata.total]);
-                btc.push([d, jsondata.btc])
-                eth.push([d, jsondata.eth])
-                diffusd.push([d, jsondata.usddiff])
-                diffeth.push([d, jsondata.ethdiff])
-                diffbtc.push([d, jsondata.btcdiff])
-                refdiff.push([d, jsondata.refdiff])
+				var d2 = new Date().getTime();
+				total.push([d2, jsondata.total]);
+                btc.push([d2, jsondata.btc])
+                eth.push([d2, jsondata.eth])
+                diffusd.push([d2, jsondata.usddiff])
+                diffeth.push([d2, jsondata.ethdiff])
+                diffbtc.push([d2, jsondata.btcdiff])
+let diffs = [jsondata.usddiff, jsondata.ethdiff, jsondata.btcdiff]
+let lll = -99999
+for (var d in diffs){
+if (diffs[d] > lll){
+lll = diffs[d]
+
+}
+}
+                refdiff.push([d2, jsondata.refdiff])
                 chart2.series[0].setData(btc);
                 chart3.series[0].setData(eth);
 				chart.series[0].setData(total);
@@ -251,18 +260,52 @@ The goal of this bot isn't to profit: it's to show off that there would be profi
                 chart0.series[1].setData(diffeth);
                 chart0.series[2].setData(diffbtc);
                 chart0.series[4].setData(refdiff);
-                let avg = (jsondata.usddiff + jsondata.ethdiff + jsondata.btcdiff) / 3
-                diffavg.push([d, avg])
+                let avg2 = (jsondata.usddiff + jsondata.ethdiff + jsondata.btcdiff) / 3
+                diffavg.push([d2, avg2])
                 chart0.series[3].setData(diffavg);
                 console.log('trade')
-                let max = 0;
+                let max = 99999999999999999999999999999;
                                 for (var p in jsondata.trades2){
-if (jsondata.trades2[p].time > max){
+if (jsondata.trades2[p].time < max){
     max = jsondata.trades2[p].time
 }
 
 }
-                console.log(max )
+            $('#least').html(new Date(max))
+
+            $('#hours').html((new Date().getTime() - max) / 1000 / 60 / 60)
+	    let hours = (new Date().getTime() - max) / 1000 / 60 / 60
+console.log(hours)	    
+let div = 24 / hours
+console.log(div)
+console.log(jsondata.btcVol)	
+	    let dailyvol = div * jsondata.btcVol
+console.log(dailyvol)            
+$('#dailyvol').html(dailyvol)
+
+let a = jsondata.btc / 0.01
+            let b2 = dailyvol / a
+            let c = b2 / 0.01 / 1
+            let dd = lll * (24 / hours)
+            dd = -1* dd
+	dd = dd / 100
+ 	dd = dd + 1
+d = 1
+
+console.log(c)
+            $('#1btc').html('daily vol: ' + c + ' 30 day vol: ' + (c * 30) + ' days til 0% fees: ' + (1500 / c) + ' dd: ' + (dd) + ' exp. drawdown til 0%: ' + Math.pow(dd, 1500 / c) + ' daily fees @ 0.1%: <span style="color:red;">' + (c * 0.001) + '</span> income @ 0.1%: <span style="color:red;">' + (d / dd - d) + '</span> income @ 0.0%: ' + ((c * 0.001) + ((d / dd - d))) + ' income @ 0.1% rebate:  <span style="color:green;">' + (((c * 0.001) + (((c * 0.001) + ((d / dd - d)))))) + '</span>')
+            c = c * 5
+d = d * 5
+console.log(c)
+             $('#5btc').html('daily vol: ' + c + ' 30 day vol: ' + (c * 30) + ' days til 0% fees: ' + (1500 / c) + ' dd: ' + (dd) + ' exp. drawdown til 0%: ' + Math.pow(dd, 1500 / c) + ' daily fees @ 0.1%: <span style="color:red;">' + (c * 0.001) + '</span> income @ 0.1%: <span style="color:red;">' + (d / dd - d) + '</span> income @ 0.0%: ' + ((c * 0.001) + ((d / dd - d))) + ' income @ 0.1% rebate:  <span style="color:green;">' + (((c * 0.001) + (((c * 0.001) + ((d / dd - d))))))+ '</span>')
+console.log(c)             
+c = c * 2
+d = d * 2
+              $('#10btc').html('daily vol: ' + c + ' 30 day vol: ' + (c * 30) + ' days til 0% fees: ' + (1500 / c) + ' dd: ' + (dd) + ' exp. drawdown til 0%: ' + Math.pow(dd, 1500 / c) + ' daily fees @ 0.1%: <span style="color:red;">' + (c * 0.001) + '</span> income @ 0.1%: <span style="color:red;">' + (d / dd - d) + '</span> income @ 0.0%: ' + ((c * 0.001) + ((d / dd - d))) + ' income @ 0.1% rebate:  <span style="color:green;">' + (((c * 0.001) + (((c * 0.001) + ((d / dd - d)))))) + '</span>')
+  c = c * 2
+             d = 20
+              $('#20btc').html('daily vol: ' + c + ' 30 day vol: ' + (c * 30) + ' days til 0% fees: ' + (1500 / c) + ' dd: ' + (dd) + ' exp. drawdown til 0%: ' + Math.pow(dd, 1500 / c) + ' daily fees @ 0.1%: <span style="color:red;">' + (c * 0.001) + '</span> income @ 0.1%: <span style="color:red;">' + (d / dd - d) + '</span> income @ 0.0%: ' + ((c * 0.001) + ((d / dd - d))) + ' income @ 0.1% rebate: <span style="color:green;">' + (((c * 0.001) + (((c * 0.001) + ((d / dd - d))))))+ '</span>')                
+console.log(max )
                 for (var p in jsondata.trades2){
                     if (jsondata.trades2[p].isBuyer == 'buy'){
                     let new_line = {

@@ -50,9 +50,9 @@ app.post('/', (req, res) => {
 })
 let maxbal = 50;
 let total2 = 0;
-let btcstart = 0.006717910081570958;
-let ethstart = 0.19635497644031719;
-let usdstart = 26.836045088873048;
+let btcstart = 0.007693010747266187;
+let ethstart = 0.22619348021488078;
+let usdstart = 30.6469546343142;
 let btcref = 4004.93;
 let ethtotal = 0;
 let btctotal = 0;
@@ -100,7 +100,7 @@ async function getTrades(){
                 }
             }
         }
-        btcVol = 0;
+    //    btcVol = 0;
         
         for (var g in gos){
 
@@ -108,8 +108,12 @@ async function getTrades(){
         let trades = (await restClient.getAllMyTrades({
           symbol: symbol,
         })).trades
-         least = 99999999999999999999999999999999;
+        // least = 99999999999999999999999999999999;
         for (var t in trades){
+if (!tradeids.includes(trades[t].clientOrderId + trades[t].timestamp.toString())){
+// if (trades[t].timestamp < least){
+ //               least = trades[t].timestamp;
+  //          }
 
             if (trades[t].side == 'buy'){
         console.log(btcVol)
@@ -117,19 +121,19 @@ async function getTrades(){
                       console.log(trades[t])
 
             if (trades[t].symbol != 'ETHBTC' && trades[t].symbol != 'USDBTC' && trades[t].symbol != 'BTCUSD'){
-            if (trades[t].timestamp < least){
-                least = trades[t].timestamp;
-            }
+            //if (trades[t].timestamp < least){
+            //    least = trades[t].timestamp;
+            //}
             if (trades[t].symbol.substring(trades[t].symbol.length - 3, trades[t].symbol.length) == 'USD'){
                 
                 btcVol += ((parseFloat(trades[t].fee) * btcs2['USD']) ) / .002
             }
             else  if (trades[t].symbol.substring(trades[t].symbol.length - 3, trades[t].symbol.length) == 'ETH'){
                 console.log('eth:' + btcs2['ETH'])
-                btcVol += (((parseFloat(trades[t].fee)) / btcs2['ETH'])) / .002
+                btcVol += (((parseFloat(trades[t].fee)) * btcs['ETH'])) / .002
             }
             else if (trades[t].symbol.substring(trades[t].symbol.length - 3, trades[t].symbol.length) == 'BTC'){
-                btcVol += ((parseFloat(trades[t].fee)) / .002)
+                btcVol += ((parseFloat(trades[t].execPrice) * parseFloat(trades[t].execQuantity) * 2))
             }
 
         console.log(btcVol)
@@ -138,7 +142,7 @@ async function getTrades(){
     }
 
 
-            if (!tradeids.includes(trades[t].clientOrderId + trades[t].timestamp.toString())){
+           // if (!tradeids.includes(trades[t].clientOrderId + trades[t].timestamp.toString())){
                 tradeids.push(trades[t].clientOrderId + trades[t].timestamp.toString());
             
             trades2.push({'symbol': symbol, 'price': trades[t].execPrice, 'isBuyer': trades[t].side, 'time': trades[t].timestamp})
