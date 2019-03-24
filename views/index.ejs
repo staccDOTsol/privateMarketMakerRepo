@@ -224,7 +224,7 @@ The goal of this bot isn't to profit: it's to show off that there would be profi
         var refdiff = []
         setInterval(function() {
             //chart = Highcharts.stockChart('container', options);
-            $.getJSON('http://techvoices.club/update?name=2', function(jsondata) {
+            $.getJSON('http://localhost:8079/update?name=2', function(jsondata) {
             $('#numOrders').html(jsondata.orders);
             $('#numTrades').html(jsondata.trades)
             $('#balances').html('');
