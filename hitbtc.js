@@ -32,7 +32,7 @@ app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
 
 app.set('view engine', 'ejs');
 
-app.listen(process.env.PORT || 8080, function() {});
+app.listen(process.env.PORT || 80, function() {});
 
 app.get('/update', (req, res) => {
 

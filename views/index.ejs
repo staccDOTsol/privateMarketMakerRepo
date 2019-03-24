@@ -231,7 +231,7 @@ The goal of this bot isn't to profit: it's to show off that there would be profi
             for (var b in jsondata.balances){
             $('#balances').append('<br>' + b + ": free: " + jsondata.balances[b] + " on orders: " + jsondata.balances2[b])
             }
-            $('#least').html(jsondata.least)
+            $('#least').html(new Date(jsondata.least))
             $('#buyOrders').html(jsondata.buyOrders)
             $('#sellOrders').html(jsondata.sellOrders)
                 console.log(jsondata);
