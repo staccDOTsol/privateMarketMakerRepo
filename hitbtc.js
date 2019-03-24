@@ -90,10 +90,10 @@ app.post('/', (req, res) => {
 })
 let maxbal = 50;
 let total2 = 0;
-let btcstart = 0.01840385751848017;
-let ethstart = 0.540069915009321;
-let usdstart = 73.16435152614274;
-let btcref = 4004.93;
+let btcstart = 0.01810541947013747;
+let ethstart = 0.53102375662021;
+let usdstart = 72.1863074274381;
+let btcref = 3992;
 let ethtotal = 0;
 let btctotal = 0;
 let trades2 = []
@@ -164,16 +164,22 @@ if (!tradeids.includes(trades[t].clientOrderId + trades[t].timestamp.toString())
             //if (trades[t].timestamp < least){
             //    least = trades[t].timestamp;
             //}
+            if (fees[trades[t].symbol] == undefined){
+                fees[trades[t].symbol] = 0
+            }
             if (trades[t].symbol.substring(trades[t].symbol.length - 3, trades[t].symbol.length) == 'USD'){
                 
                 btcVol += ((parseFloat(trades[t].fee) * btcs2['USD']) ) / .002
+                fees[trades[t].symbol] += (parseFloat(trades[t].fee) * btcs2['USD'])
             }
             else  if (trades[t].symbol.substring(trades[t].symbol.length - 3, trades[t].symbol.length) == 'ETH'){
                 //console.log('eth:' + btcs2['ETH'])
                 btcVol += (((parseFloat(trades[t].fee)) * btcs['ETH'])) / .002
+                fees[trades[t].symbol] +=parseFloat(trades[t].fee) * btcs['ETH']
             }
             else if (trades[t].symbol.substring(trades[t].symbol.length - 3, trades[t].symbol.length) == 'BTC'){
                 btcVol += ((parseFloat(trades[t].execPrice) * parseFloat(trades[t].execQuantity) * 2))
+                fees[trades[t].symbol] += parseFloat(trades[t].fee) * 2
             }
 
         //console.log(btcVol)
@@ -193,6 +199,7 @@ if (!tradeids.includes(trades[t].clientOrderId + trades[t].timestamp.toString())
 }
 let btcVol = 0;
 let numOrders = 0;
+let fees = {}
 setTimeout(function(){
 
 getTrades();
@@ -223,7 +230,11 @@ async function doPost(req, res) {
     let bals2 = {}
     balances = (await restClient.getMyBalance()).balance
     for (var b in balances) {
+
         bals2[b] = parseFloat(balances[b].cash) + parseFloat(balances[b].reserved)
+    }
+    for (var t in fees){
+        bals2[t.substring(0, t.length-3)] += fees[t]
     }
     total2 = 0;
     ethtotal = 0;
