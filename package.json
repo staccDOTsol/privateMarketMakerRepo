@@ -20,6 +20,7 @@
     "mongodb": "*",
     "path": "*",
     "poloniex-api-node": "^1.9.0",
+    "portfolio-analytics": "0.0.4",
     "request": "^2.88.0",
     "serve-favicon": "*",
     "socks-proxy-agent": "*",

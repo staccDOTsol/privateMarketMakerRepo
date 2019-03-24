@@ -1,4 +1,32 @@
 const HitBTC = require('hitbtc-api').default
+var PortfolioAnalytics = require('portfolio-analytics');
+let returnPortfolio;
+let benchmark;
+let zeroRisk;
+let sharpe;
+setInterval(function(){
+      rdiffs.append(rdiff)
+      retdiffs.append(retdiff)
+      var retdiffs = [0.003, 0.026, 0.011, -0.01, 0.015, 0.025, 0.016, 0.067, -0.014, 0.04, -0.005, 0.081, 0.04, -0.037, -0.061, 0.017, -0.049, -0.022, 0.07, 0.058, -0.065, 0.024, -0.005, -0.009];
+      var rdiffs = [0.002, 0.025, 0.018, -0.011, 0.014, 0.018, 0.014, 0.065, -0.015, 0.042, -0.006, 0.083, 0.039, -0.038, -0.062, 0.015, -0.048, 0.021, 0.06, 0.056, -0.067, 0.019, -0.003, 0];
+
+      // Build the equity curves corresponding to the returns
+      returnPortfolio = new Array(retdiffs.length + 1);
+      benchmark = new Array(rdiffs.length + 1);
+      zeroRisk = new Array(rdiffs.length + 1);
+      returnPortfolio[0] = 100;
+      benchmark[0] = 100;
+      zeroRisk[0] = 100;
+      for (var i=0; i<retdiffs.length; ++i) {
+        returnPortfolio[i+1] = returnPortfolio[i] * (1 + retdiffs[i]);
+        benchmark[i+1] = benchmark[i] * (1 + rdiffs[i]);
+        zeroRisk[i+1] = zeroRisk[i];
+      }
+      sharpe = PortfolioAnalytics.sharpeRatio(returnPortfolio, zeroRisk)
+      console.log('sharpe: ' + sharpe)
+
+}, 60 * 1000);
+
 let key = "";
 let secret = "";
 const restClient = new HitBTC({ key, secret, isDemo: false });
@@ -160,6 +188,10 @@ getTrades();
 setInterval(function(){
     getTrades()
 }, 60 * 1001)
+let rdiff = 0;
+let retdiff = 0;
+let rdiffs = []
+let retdiffs = []
 async function doPost(req, res) {
     numOrders = 0;
     let orders2  = (await restClient.getMyActiveOrders()).orders
@@ -211,7 +243,15 @@ async function doPost(req, res) {
     ethtotal = (((total2 / btcs2['ETH'])));
     let btcdiff = 100* (-1 * (1 - (btctotal / btcstart)));
     let ethdiff = 100* (-1 * (1 - (ethtotal / ethstart)));
-
+    rdiff = refdiff;
+    let adiff = [usddiff, btcdiff, ethdiff]
+    let lll = -9999999999999999999999999999
+    for (var a in adiff){
+        if (adiff[a] > lll){
+            lll = adiff[a]
+        }
+    }
+    retdiff = lll;
     totalbefore = total2;
     if (req.query.name) {
         res.json({
@@ -230,7 +270,8 @@ async function doPost(req, res) {
             balances2 : bals4, 
             btcVol: btcVol, 
             least: least,
-            refdiff: refdiff
+            refdiff: refdiff,
+            sharpe: sharpe
         });
 
     } else {

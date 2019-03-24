@@ -199,7 +199,7 @@
 <script src="https://code.highcharts.com/stock/highstock.js"></script>
 <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
-The goal of this bot isn't to profit: it's to show off that there would be profits if we eliminated the 0.1% trading fee, or effect a market maker rebate of -0.01% or up to -0.1%. Imagine this chart as you're watching it without the steep falls after some of the green (buying) lines: those drops are fees. Imagine it with bigger climbs on some of the red (selling) lines: sales without fees. <a href="https://medium.com/@jarettrsdunn/binance-hitbtc-etc-market-maker-pitch-how-to-get-rich-online-2988c1d328ac">Read More Here.</a> <br> <br> # current orders: <div id = 'numOrders'></div> Buy orders: <div id = 'buyOrders'></div> Sell orders: <div id = 'sellOrders'></div>  <br> # recent trades: <div id = 'numTrades'></div><br>All balances: <div id = "balances"></div><br>Oldest trade in recent memory: <div id = 'least'></div> and btcVol in recent memory: <div id='btcVol'></div><br>Hours since oldest trade: <div id ='hours'></div><br>Est. daily vol: <div id="dailyvol"></div><br><br>Est. 1 BTC invested: <div id="1btc"></div>Est. 5 BTC invested: <div id="5btc"></div>Est. 10 BTC invested: <div id="10btc"></div>Est. 20 BTC invested: <div id="20btc"></div>
+The goal of this bot isn't to profit: it's to show off that there would be profits if we eliminated the 0.1% trading fee, or effect a market maker rebate of -0.01% or up to -0.1%. Imagine this chart as you're watching it without the steep falls after some of the green (buying) lines: those drops are fees. Imagine it with bigger climbs on some of the red (selling) lines: sales without fees. <a href="https://medium.com/@jarettrsdunn/binance-hitbtc-etc-market-maker-pitch-how-to-get-rich-online-2988c1d328ac">Read More Here.</a> <br> <br> # current orders: <div id = 'numOrders'></div> Buy orders: <div id = 'buyOrders'></div> Sell orders: <div id = 'sellOrders'></div>  <br> # recent trades: <div id = 'numTrades'></div><br>All balances: <div id = "balances"></div><br>Oldest trade in recent memory: <div id = 'least'></div> and btcVol in recent memory: <div id='btcVol'></div><br>Hours since oldest trade: <div id ='hours'></div><br>Est. daily vol: <div id="dailyvol"></div><br><br>Est. 1 BTC invested: <div id="1btc"></div>Est. 5 BTC invested: <div id="5btc"></div>Est. 10 BTC invested: <div id="10btc"></div>Est. 20 BTC invested: <div id="20btc"></div><br>Minutely Sharpe vs. hold BTC: <div id="sharpe"></div>
 
 <div id="container0" style="height: 500px; min-width: 310px"></div>
 <div id="container" style="height: 500px; min-width: 310px"></div>
@@ -281,7 +281,8 @@ console.log(div)
 console.log(jsondata.btcVol)	
 	    let dailyvol = div * jsondata.btcVol
 console.log(dailyvol)            
-$('#dailyvol').html(dailyvol)
+$('#dailyvol').html(dailyvol)  
+$('#sharpe').html(jsondata.sharpe)
 
 let a = jsondata.btc / 0.01
             let b2 = dailyvol / a
