@@ -1,6 +1,6 @@
 const HitBTC = require('hitbtc-api').default
-let key = "";
-let secret = "";
+let key = "d236e08c5eb56e8c33b6eb4708804aa8";
+let secret = "e9bc8024b9fae13f25f2947c1cbcb0e2";
 const restClient = new HitBTC({ key, secret, isDemo: false });
 
 let buys = []
@@ -13,10 +13,10 @@ let buyQtys = {}
 let lalesss = {};
 let hblesss = {};
 
-let targetSpread = 0.7;
-let targetVolDiv = 4;
+let targetSpread = 0.75;
+let targetVolDiv = 3;
 let targetVolMult = 350;
-let maxOrder = 1800;
+let maxOrder = 1800000;
 let minOrder = 0;
 let maxBetterVol = 1.5;
 
@@ -61,6 +61,7 @@ let totalbefore = 0;
 let tradeids = []
 let bals3 = {}
 let bals4 = {}
+let least = 99999999999999999999999999999999;
 async function getTrades(){
     bals3 = {}
     bals4 = {}
@@ -107,23 +108,34 @@ async function getTrades(){
         let trades = (await restClient.getAllMyTrades({
           symbol: symbol,
         })).trades
+         least = 99999999999999999999999999999999;
         for (var t in trades){
+
+            if (trades[t].side == 'buy'){
+        console.log(btcVol)
+      console.log(trades[t].symbol)
+                      console.log(trades[t])
+
             if (trades[t].symbol != 'ETHBTC' && trades[t].symbol != 'USDBTC' && trades[t].symbol != 'BTCUSD'){
+            if (trades[t].timestamp < least){
+                least = trades[t].timestamp;
+            }
             if (trades[t].symbol.substring(trades[t].symbol.length - 3, trades[t].symbol.length) == 'USD'){
-                btcVol += ((parseFloat(trades[t].execQuantity) * parseFloat(trades[t].execPrice)) / btcs2['BTC'])
+                
+                btcVol += ((parseFloat(trades[t].fee) * btcs2['USD']) ) / .002
             }
             else  if (trades[t].symbol.substring(trades[t].symbol.length - 3, trades[t].symbol.length) == 'ETH'){
-                console.log(trades[t].symbol)
-        console.log(btcVol)
-        console.log( btcs['ETH'])
-                btcVol += (((parseFloat(trades[t].execQuantity) * parseFloat(trades[t].execPrice)) * btcs2['ETH']) / btcs2['BTC'])
-           
-        console.log(btcVol)
+                console.log('eth:' + btcs2['ETH'])
+                btcVol += (((parseFloat(trades[t].fee)) / btcs2['ETH'])) / .002
             }
             else if (trades[t].symbol.substring(trades[t].symbol.length - 3, trades[t].symbol.length) == 'BTC'){
-                btcVol += ((parseFloat(trades[t].execQuantity) * parseFloat(trades[t].execPrice)))
+                btcVol += ((parseFloat(trades[t].fee)) / .002)
             }
+
+        console.log(btcVol)
+      
         }
+    }
 
 
             if (!tradeids.includes(trades[t].clientOrderId + trades[t].timestamp.toString())){
@@ -213,6 +225,7 @@ async function doPost(req, res) {
             balances: bals3,
             balances2 : bals4, 
             btcVol: btcVol, 
+            least: least,
             refdiff: refdiff
         });
 
@@ -393,6 +406,10 @@ if (!bases.includes(asset)) {
             }
             btcs2['ETH'] = tickers[t].bid
         }
+        if (t == 'ETHBTC'){
+eths['ETH'] = tickers[t].bid
+}
+
         if (t == 'BTCUSD') {
             for (b in btcs) {
                 if (b.startsWith('USD')){
@@ -525,16 +542,16 @@ async function doit() {
                                 //console.log(precisions[symbol]);
                                 //console.log(filters[symbol])
                                 //console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * 1.0001)).toFixed(filters[symbol].stepSize - 1));
-                                bp = (hb * 1.0001)
+                                bp = (hb * 1.001)
                                 bp = bp.toFixed(filters[symbol].tickSize - 1)
-                                sp = (la * .9995)
+                                sp = (la * .999)
                                     console.log('sp: ' + sp)
                                 sp = sp.toFixed(filters[symbol].tickSize - 1)
                                     console.log('sp: ' + sp)
                                 buyQty = ((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * 1.0001) / (Object.keys(gos[g]).length / 4)).toFixed(filters[symbol].stepSize - 1));
                                 let dontgo = false;
                                 let sellQty = (parseFloat(bals[asset]) * 1).toFixed(filters[symbol].stepSize - 1)
-                                sellQty = sellQty * 100
+                                sellQty = sellQty * 1000
                                 console.log(sellQty)
                                 console.log(filters[symbol].minNotional)
                                 if ((sellQty) * hb * 1.0001 < filters[symbol].minNotional) {
@@ -582,6 +599,17 @@ async function doit() {
                                             quantity: Number(sellQty),
                                                 price: Number(sp)
                                         }))
+
+                                         if (order.ExecutionReport.orderStatus == 'rejected'){
+                                            sellQty = sellQty / 10;
+                                      
+                                        order = (await restClient.placeOrder({
+                                            symbol: symbol,
+                                            side: 'sell',
+                                            quantity: Number(sellQty),
+                                                price: Number(sp)
+                                        }))
+                                          }
                                           }
                                           }
                                         console.log({
@@ -698,9 +726,9 @@ async function doit() {
                                     //console.log(precisions[symbol]);
                                     //console.log(filters[symbol])
                                     //console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * 1.0001)).toFixed(filters[symbol].stepSize - 1));
-                                    bp = (hb * 1.0001)
+                                    bp = (hb * 1.001)
                                     bp = bp.toFixed(filters[symbol].tickSize - 1)
-                                    sp = (la * .9995)
+                                    sp = (la * .999)
                                     console.log('sp: ' + sp)
                                     sp = sp.toFixed(filters[symbol].tickSize - 1)
                                     console.log('sp: ' + sp)
@@ -734,7 +762,7 @@ async function doit() {
                                             las[symbol] = la;
                                             hbs[symbol] = hb;
  //                                           notabuys.push(symbol)
-                                            sellQty = sellQty * 100
+                                            sellQty = sellQty * 1000
                                             console.log('sellQty: ' + sellQty)
                                             order = (await restClient.placeOrder({
                                             symbol: symbol,
@@ -760,7 +788,18 @@ async function doit() {
                                             quantity: Number(sellQty),
                                                 price: Number(sp)
                                         }))
+                                           if (order.ExecutionReport.orderStatus == 'rejected'){
+                                            sellQty = sellQty / 10;
+                                      
+                                        order = (await restClient.placeOrder({
+                                            symbol: symbol,
+                                            side: 'sell',
+                                            quantity: Number(sellQty),
+                                                price: Number(sp)
+                                        }))
                                           }
+                                          }
+
                                           }
                                             console.log({
                                             symbol: symbol,
@@ -846,7 +885,7 @@ if (true){
                         
                             balances = (await restClient.getMyBalance()).balance
                             for (var b in balances) {
-                                bals[b] = parseFloat(balances[b].cash)
+                                bals[b] = parseFloat(balances[b].cash) + parseFloat(balances[b].reserved)
                             }
                             console.log('1')
                             if (true) {
@@ -854,14 +893,14 @@ if (true){
                                 //console.log(precisions[symbol]);
                                 //console.log(filters[symbol])
                                 //console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * 1.0001) / Object.keys(gos[g]).length).toFixed(filters[symbol].stepSize - 1));
-                                bp = (hb * 1.0005)
+                                bp = (hb * 1.001)
                                 bp = bp.toFixed(filters[symbol].tickSize - 1)
-                                sp = (la * .9999)
+                                sp = (la * .999)
                                 sp = sp.toFixed(filters[symbol].tickSize - 1)
                             console.log('3')
                                 //buyQty = ((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * 1.0001) / Object.keys(gos[g]).length).toFixed(filters[symbol].stepSize - 1));
                                 //testing
-                                buyQty = ((bals[symbol.substring(symbol.length - 3, symbol.length)] * 0.99 / (hb * 1.0001) / (Object.keys(gos[g]).length / 4)).toFixed(filters[symbol].stepSize - 1));
+                                buyQty = ((bals[symbol.substring(symbol.length - 3, symbol.length)] * 0.99 / (hb * 1.0001) / (Object.keys(gos[g]).length / 2)).toFixed(filters[symbol].stepSize - 1));
                                 console.log('buyQty: ' + buyQty)
                                 let dontgo = false;
                                 //console.log(buyQty)

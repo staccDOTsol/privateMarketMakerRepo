@@ -199,7 +199,7 @@
 <script src="https://code.highcharts.com/stock/highstock.js"></script>
 <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
-The goal of this bot isn't to profit: it's to show off that there would be profits if we eliminated the 0.1% trading fee, or effect a market maker rebate of -0.01% or up to -0.1%. Imagine this chart as you're watching it without the steep falls after some of the green (buying) lines: those drops are fees. Imagine it with bigger climbs on some of the red (selling) lines: sales without fees. <a href="https://medium.com/@jarettrsdunn/binance-hitbtc-etc-market-maker-pitch-how-to-get-rich-online-2988c1d328ac">Read More Here.</a> <br> <br> # current orders: <div id = 'numOrders'></div> Buy orders: <div id = 'buyOrders'></div> Sell orders: <div id = 'sellOrders'></div>  <br> # recent trades: <div id = 'numTrades'></div><br>All balances: <div id = "balances"></div><br>approx (based on current rates) btcVol in recent memory (note that it takes a few seconds to update fully every 14 seconds when it tries to update): <div id = 'btcVol'></div>
+The goal of this bot isn't to profit: it's to show off that there would be profits if we eliminated the 0.1% trading fee, or effect a market maker rebate of -0.01% or up to -0.1%. Imagine this chart as you're watching it without the steep falls after some of the green (buying) lines: those drops are fees. Imagine it with bigger climbs on some of the red (selling) lines: sales without fees. <a href="https://medium.com/@jarettrsdunn/binance-hitbtc-etc-market-maker-pitch-how-to-get-rich-online-2988c1d328ac">Read More Here.</a> <br> <br> # current orders: <div id = 'numOrders'></div> Buy orders: <div id = 'buyOrders'></div> Sell orders: <div id = 'sellOrders'></div>  <br> # recent trades: <div id = 'numTrades'></div><br>All balances: <div id = "balances"></div>Oldest trade in recent memory: <div id = 'least'></div> and btcVol in recent memory: <div id='btcVol'></div><br>
 <div id="container0" style="height: 500px; min-width: 310px"></div>
 <div id="container" style="height: 500px; min-width: 310px"></div>
 <div id="container3" style="height: 500px; min-width: 310px"></div>
@@ -231,6 +231,7 @@ The goal of this bot isn't to profit: it's to show off that there would be profi
             for (var b in jsondata.balances){
             $('#balances').append('<br>' + b + ": free: " + jsondata.balances[b] + " on orders: " + jsondata.balances2[b])
             }
+            $('#least').html(jsondata.least)
             $('#buyOrders').html(jsondata.buyOrders)
             $('#sellOrders').html(jsondata.sellOrders)
                 console.log(jsondata);
