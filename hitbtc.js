@@ -17,6 +17,9 @@ let maxOrder = 1800000;
 let minOrder = 0;
 let maxBetterVol = 1.5;
 let neversellataloss = true;
+let stoploss = 0.92;
+let neversellatalossReductionIntervalMinutes = 10;
+
 
 let returnPortfolio;
 let benchmark;
@@ -650,8 +653,8 @@ async function doPost(req, res) {
             buyOrders: buyOrders,
             sellOrders: sellOrders,
             balances: bals3,
-            balances2 : bals4, 
-            btcVol: btcVol, 
+            balances2 : bals4,
+            btcVol: btcVol,
             least: least,
             refdiff: refdiff,
             refdiff2: refdiff2,
@@ -809,7 +812,7 @@ let symbol = t;
         if (!bases.includes(asset)) {
             if (asset == 'ROX'){
             }
-            btcs[asset] = parseFloat(tickers[t].bid) 
+            btcs[asset] = parseFloat(tickers[t].bid)
         }
 }
             else   if (symbol.substring(symbol.length - 3, symbol.length) == 'ETH') {
@@ -956,7 +959,7 @@ async function doit() {
                                     clientOrderId: orders[o].clientOrderId,
                                 }))
                             }
-                        } 
+                        }
                         balances = (await restClient.getMyBalance()).balance
                         for (var b in balances) {
                             if (b == 'BTC' || b == 'ETH' || b.startsWith('USD')){
@@ -1075,7 +1078,7 @@ async function doit() {
                                     clientOrderId: orders[o].clientOrderId,
                                 }))
                             }
-                        } 
+                        }
                     }
                         balances = (await restClient.getMyBalance()).balance
                         for (var b in balances) {
@@ -1119,7 +1122,7 @@ async function doit() {
                                 ////console.log(bp)
                                 if ((neversellataloss == true && ((sp < buyOs[symbol])))){
                                     dontbuy[symbol] = true;
-                                } 
+                                }
                                 if (dontgo == false && sellQty > 0.00000001 && (neversellataloss == true && ((sp > buyOs[symbol])))) {
                                     dontbuy[symbol] = false;
                                     //lala++;
@@ -1264,7 +1267,7 @@ async function doit() {
                                     clientOrderId: orders[o].clientOrderId,
                                 }))
                             }
-                        } 
+                        }
 }
                             
                             balances = (await restClient.getMyBalance()).balance
@@ -1307,7 +1310,7 @@ async function doit() {
 
                                 if ((neversellataloss == true && (( sp < buyOs[symbol])))){
                                     dontbuy[symbol] = true;
-                                } 
+                                }
                                     if (dontgo == false && sellQty > 0.00001 && (neversellataloss == true && ((sp > buyOs[symbol])))) {
                                         dontbuy[symbol] = false;
                                         //lala++;
@@ -1438,7 +1441,7 @@ async function doit() {
                                     clientOrderId: orders[o].clientOrderId,
                                 }))
                             }
-                        } 
+                        }
 
 }
 if (true){
@@ -1455,7 +1458,7 @@ if (true){
                                 ////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * 1.0001) / Object.keys(gos[g]).length).toFixed(filters[symbol].stepSize - 1));
                                 bp = (hb * 1.001)
                                 bp = bp.toFixed(filters[symbol].tickSize - 1)
-                                let stop = (bp * 0.92)
+                                let stop = (bp * stoploss)
                                 stop = stop.toFixed(filters[symbol].tickSize - 1)
                                 sp = (la * .999)
                                 sp = sp.toFixed(filters[symbol].tickSize - 1)
@@ -1561,9 +1564,9 @@ let divisor = {}
 setInterval(function(){
 for (var symbol in divisor){
     divisor[symbol] = divisor[symbol] * 1.0001
-buyOs[symbol] = buyOs[symbol] / divisor[symbol] 
+buyOs[symbol] = buyOs[symbol] / divisor[symbol]
 }
-}, 60 * 10 * 1000)
+}, 60 * neversellatalossReductionIntervalMinutes * 1000)
 function countDecimalPlaces(number) {
     var str = "" + number;
     if (str == '1e-7') {
