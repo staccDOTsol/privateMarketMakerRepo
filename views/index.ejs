@@ -260,7 +260,7 @@ lll2 = diffs2[d]
 
 }
 }
-                refdiff.push([d2, jsondata.refdiff])
+                refdiff.push([d2, jsondata.refdiff2])
                 chart2.series[0].setData(btc);
                 chart3.series[0].setData(eth);
 				chart.series[0].setData(total);
@@ -285,16 +285,20 @@ if (jsondata.trades2[p].time < max){
 	    let hours = (new Date().getTime() - max) / 1000 / 60 / 60
 console.log(hours)	    
 let div = 24 / hours
-console.log(div)
-console.log(jsondata.btcVol)	
+console.log('div:' + div)
+console.log('btcvol: ' +jsondata.btcVol)	
 	    let dailyvol = div * jsondata.btcVol
-console.log(dailyvol)            
+console.log('dailyvol: ' + dailyvol)            
 $('#dailyvol').html(dailyvol)  
 $('#sharpe').html(jsondata.sharpe)
 
 let a = jsondata.btc / 0.01
+console.log('a: ' + a)
             let b2 = dailyvol / a
+console.log('b2: ' + b2)
             let c = b2 / 0.01 / 1
+            console.log('c: '  + c)
+            console.log('lll2: ' + lll2)
             let dd = lll2 * (24 / hours)
             dd = -1* dd
 	dd = dd / 100

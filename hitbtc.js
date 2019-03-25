@@ -301,8 +301,8 @@ async function doPost(req, res) {
         bals2[t.substring(0, t.length-3)] += feeseth[t]
     }
     let total22 = 0;
-    ethtotal = 0;
-    btctotal = 0;
+   let ethtotal2 = 0;
+  let  btctotal2 = 0;
     ////console.log(bals2)
     for (var bal in bals2){
                     // //console.log(parseFloat(bals2[bal]))
@@ -325,10 +325,10 @@ async function doPost(req, res) {
     }
     let refdiff2= 100* (-1 * (1 - (btcs['BTC'] / btcref)));
     let usddiff2 = 100* (-1 * (1 - (total22 / usdstart)));
-    let btctotal2 = (((total22 / btcs['BTC'])));
-    let ethtotal2 = (((total22 / btcs2['ETH'])));
-    let btcdiff2 = 100* (-1 * (1 - (btctotal22 / btcstart)));
-    let ethdiff2 = 100* (-1 * (1 - (ethtotal22 / ethstart)));
+    btctotal2 = (((total22 / btcs['BTC'])));
+    ethtotal2 = (((total22 / btcs2['ETH'])));
+    let btcdiff2 = 100* (-1 * (1 - (btctotal2 / btcstart)));
+    let ethdiff2 = 100* (-1 * (1 - (ethtotal2 / ethstart)));
     let rdiff2 = refdiff2;
     let adiff2 = [usddiff2, btcdiff2, ethdiff2]
     let lll2 = -9999999999999999999999999999
