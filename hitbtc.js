@@ -1115,10 +1115,10 @@ async function doit() {
                                     dontgo = true;
                                 }
                                 ////console.log(bp)
-                                if ((neversellataloss == true && ((avgBids[symbol] != undefined && sp < avgBids[symbol]) || (avgBids[symbol] == undefined && sp > buyOs[symbol])))){
+                                if ((neversellataloss == true && ((sp > buyOs[symbol])))){
                                     dontbuy[symbol] = true;
                                 } 
-                                if (dontgo == false && sellQty > 0.00000001 && (neversellataloss == true && ((avgBids[symbol] != undefined && sp < avgBids[symbol]) || (avgBids[symbol] == undefined && sp > buyOs[symbol])))) {
+                                if (dontgo == false && sellQty > 0.00000001 && (neversellataloss == true && ((sp > buyOs[symbol])))) {
                                     dontbuy[symbol] = false;
                                     //lala++;
                                     try {
@@ -1303,10 +1303,10 @@ async function doit() {
                                     ////console.log(buyQty)
                                     ////console.log(bp)
 
-                                if ((neversellataloss == true && ((avgBids[symbol] != undefined && sp < avgBids[symbol]) || (avgBids[symbol] == undefined && sp > buyOs[symbol])))){
+                                if ((neversellataloss == true && (( sp > buyOs[symbol])))){
                                     dontbuy[symbol] = true;
                                 } 
-                                    if (dontgo == false && sellQty > 0.00001 && (neversellataloss == true && ((avgBids[symbol] != undefined && sp < avgBids[symbol]) || (avgBids[symbol] == undefined && sp > buyOs[symbol])))) {
+                                    if (dontgo == false && sellQty > 0.00001 && (neversellataloss == true && ((sp > buyOs[symbol])))) {
                                         dontbuy[symbol] = false;
                                         //lala++;
                                         try {
@@ -1487,7 +1487,7 @@ if (true){
 
                                 if (dontgo == false && buyQty > 0.00001 && ((neversellataloss == true && dontbuy[symbol] == false) || (dontbuy[symbol] == undefined))) {
                                     renew[symbol] = false;
-                                    buyOs[symbol] = bp;
+                                    buyOs[symbol] = avgBids[symbol];
                                     stopp[symbol] = stop;
                                     //lala++;
                                     try {
