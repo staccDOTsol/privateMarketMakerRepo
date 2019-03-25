@@ -1135,7 +1135,22 @@ async function doit() {
                 }
             }
         }
-        
+        setTimeout(function() {
+            doit();
+        }, 1000)
+
+        //console.log(count * 1 + ' intervals')
+
+    } catch (err) {
+
+        setTimeout(function() {
+            doit();
+        }, 1000)
+        //console.log(err);
+    }
+}
+setInterval(async function(){
+
         for (var symbol in stopp) {
             if (true) { //if (symbol == "GNTBNB"){
                 let book = (await restClient.getOrderBook(symbol))
@@ -1277,20 +1292,7 @@ async function doit() {
                 }
             }
         }
-        setTimeout(function() {
-            doit();
-        }, 1000)
-
-        //console.log(count * 1 + ' intervals')
-
-    } catch (err) {
-
-        setTimeout(function() {
-            doit();
-        }, 1000)
-        //console.log(err);
-    }
-}
+    }, 60000)
 setTimeout(function() {
     doit();
 }, 15000)
