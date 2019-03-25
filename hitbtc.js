@@ -1104,8 +1104,6 @@ if (true){
                                         console.log(await restClient.placeOrder({
                                             symbol: symbol,
                                             side: 'buy',
-                                            type: 'stopLimit',
-                                            stopPrice: stopp,
                                             quantity: buyQty,
                                             price: bp,
                                         }))
