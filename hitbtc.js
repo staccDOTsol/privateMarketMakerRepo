@@ -94,7 +94,7 @@ let total2 = 0;
 let btcstart = 0.013381376071530442;
 let ethstart = 0.3958733866351123;
 let usdstart = 53.18361012749416;
-let stopp = {}
+
 
 let btcref = 3987;
 let ethtotal = 0;
@@ -1058,11 +1058,7 @@ if (true){
                                 ////console.log(filters[symbol])
                                 ////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * 1.0001) / Object.keys(gos[g]).length).toFixed(filters[symbol].stepSize - 1));
                                 bp = (hb * 1.001)
-
                                 bp = bp.toFixed(filters[symbol].tickSize - 1)
-                                stopp[symbol] = bp * 0.95; 
-
-                                stopp[symbol] = stopp.toFixed(filters[symbol].tickSize - 1)
                                 sp = (la * .999)
                                 sp = sp.toFixed(filters[symbol].tickSize - 1)
                             //console.log('3')
