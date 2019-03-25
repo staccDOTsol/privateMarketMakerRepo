@@ -269,42 +269,7 @@ async function doPost(req, res) {
     
     }
     console.log('total2 before: ' + total2)
-    for (var t in feesusd){
-
-        bals2[t.substring(0, t.length-3)] += feesusd[t]
-    }
-    for (var t in feesbtc){
-
-        bals2[t.substring(0, t.length-3)] += feesbtc[t]
-    }
-    for (var t in feeseth){
-
-        bals2[t.substring(0, t.length-3)] += feeseth[t]
-    }
-    total2 = 0;
-    ethtotal = 0;
-    btctotal = 0;
-    ////console.log(bals2)
-    for (var bal in bals2){
-                    // //console.log(parseFloat(bals2[bal]))
-                    if (bals2[bal] > 0.00001){
-                 if (bal == 'USD'){
-                    total2 += parseFloat(bals2[bal])
-                }
-                else if (bal == 'BTC'){
-
-                    total2 += parseFloat(bals2[bal]) * parseFloat(btcs[bal])
-                }
-                else if (bal == 'ETH'){
-                    total2 += parseFloat(bals2[bal]) * parseFloat(btcs2[bal])
-
-                } else {
-                    total2 += parseFloat(bals2[bal]) * parseFloat(btcs2[bal])
-                }
-               }
     
-    }
-    console.log('total2 after: ' + total2)
         if (true){
             let refdiff = 100* (-1 * (1 - (btcs['BTC'] / btcref)));
     let usddiff = 100* (-1 * (1 - (total2 / usdstart)));
@@ -322,6 +287,58 @@ async function doPost(req, res) {
     }
     retdiff = lll;
     totalbefore = total2;
+
+    for (var t in feesusd){
+
+        bals2[t.substring(0, t.length-3)] += feesusd[t]
+    }
+    for (var t in feesbtc){
+
+        bals2[t.substring(0, t.length-3)] += feesbtc[t]
+    }
+    for (var t in feeseth){
+
+        bals2[t.substring(0, t.length-3)] += feeseth[t]
+    }
+    let total22 = 0;
+    ethtotal = 0;
+    btctotal = 0;
+    ////console.log(bals2)
+    for (var bal in bals2){
+                    // //console.log(parseFloat(bals2[bal]))
+                    if (bals2[bal] > 0.00001){
+                 if (bal == 'USD'){
+                    total22 += parseFloat(bals2[bal])
+                }
+                else if (bal == 'BTC'){
+
+                    total22 += parseFloat(bals2[bal]) * parseFloat(btcs[bal])
+                }
+                else if (bal == 'ETH'){
+                    total22 += parseFloat(bals2[bal]) * parseFloat(btcs2[bal])
+
+                } else {
+                    total22 += parseFloat(bals2[bal]) * parseFloat(btcs2[bal])
+                }
+               }
+    
+    }
+    let refdiff2= 100* (-1 * (1 - (btcs['BTC'] / btcref)));
+    let usddiff2 = 100* (-1 * (1 - (total22 / usdstart)));
+    let btctotal2 = (((total22 / btcs['BTC'])));
+    let ethtotal2 = (((total22 / btcs2['ETH'])));
+    let btcdiff2 = 100* (-1 * (1 - (btctotal22 / btcstart)));
+    let ethdiff2 = 100* (-1 * (1 - (ethtotal22 / ethstart)));
+    let rdiff2 = refdiff2;
+    let adiff2 = [usddiff2, btcdiff2, ethdiff2]
+    let lll2 = -9999999999999999999999999999
+    for (var a in adiff2){
+        if (adiff2[a] > lll2){
+            lll2 = adiff2[a]
+        }
+    }
+    let retdiff2 = lll2;
+    console.log('total2 after: ' + total22)
     if (req.query.name) {
         res.json({
             usddiff: usddiff,
@@ -330,6 +347,14 @@ async function doPost(req, res) {
             total: total2,
             btc: btctotal,
             eth: ethtotal,
+            usddiff2: usddiff2,
+            btcdiff2: btcdiff2,
+            ethdiff2: ethdiff2,
+            total2: total22,
+            btc: btctotal,
+            eth: ethtotal,
+            btc2: btctotal2,
+            eth2: ethtotal2,
             trades2: trades2,
             trades: trades2.length,
             orders: numOrders,
@@ -340,6 +365,7 @@ async function doPost(req, res) {
             btcVol: btcVol, 
             least: least,
             refdiff: refdiff,
+            refdiff2: refdiff2,
             sharpe: sharpe
         });
 

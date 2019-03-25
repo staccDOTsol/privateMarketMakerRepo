@@ -241,14 +241,22 @@ The goal of this bot isn't to profit: it's to show off that there would be profi
 				total.push([d2, jsondata.total]);
                 btc.push([d2, jsondata.btc])
                 eth.push([d2, jsondata.eth])
-                diffusd.push([d2, jsondata.usddiff])
-                diffeth.push([d2, jsondata.ethdiff])
-                diffbtc.push([d2, jsondata.btcdiff])
-let diffs = [jsondata.usddiff, jsondata.ethdiff, jsondata.btcdiff]
+                diffusd.push([d2, jsondata.usddiff2])
+                diffeth.push([d2, jsondata.ethdiff2])
+                diffbtc.push([d2, jsondata.btcdiff2])
+let diffs = [jsondata.usddiff2, jsondata.ethdiff2, jsondata.btcdiff2]
 let lll = -99999
 for (var d in diffs){
 if (diffs[d] > lll){
 lll = diffs[d]
+
+}
+}
+let diffs2 = [jsondata.usddiff, jsondata.ethdiff, jsondata.btcdiff]
+let lll2 = -99999
+for (var d in diffs2){
+if (diffs2[d] > lll2){
+lll2 = diffs2[d]
 
 }
 }
@@ -287,7 +295,7 @@ $('#sharpe').html(jsondata.sharpe)
 let a = jsondata.btc / 0.01
             let b2 = dailyvol / a
             let c = b2 / 0.01 / 1
-            let dd = lll * (24 / hours)
+            let dd = lll2 * (24 / hours)
             dd = -1* dd
 	dd = dd / 100
  	dd = dd + 1
