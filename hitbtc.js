@@ -1087,7 +1087,7 @@ if (true){
                                     //console.log('dontgo minqty ' + symbol)
                                     dontgo = true;
                                 }
-                                if (dontgo == false && buyQty > 0.00001 && ((neversellataloss == true && dontbuy[symbol] = false) || (dontbuy[symbol] == undefined))) {
+                                if (dontgo == false && buyQty > 0.00001 && ((neversellataloss == true && dontbuy[symbol] == false) || (dontbuy[symbol] == undefined))) {
                                     renew[symbol] = false;
                                     buyOs[symbol] = bp;
                                     //lala++;
