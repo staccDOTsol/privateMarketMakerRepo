@@ -90,9 +90,9 @@ app.post('/', (req, res) => {
 })
 let maxbal = 50;
 let total2 = 0;
-let btcstart = 0.01808537448337168;
-let ethstart = 0.5310070633622895;
-let usdstart = 72.10385611277522;
+let btcstart = 0.01796093787524092;
+let ethstart = 0.5274891736811796;
+let usdstart = 71.65623930954617;
 let btcref = 3987;
 let ethtotal = 0;
 let btctotal = 0;
@@ -287,7 +287,7 @@ async function doPost(req, res) {
     }
     retdiff = lll;
     totalbefore = total2;
-
+    /*
     for (var t in feesusd){
 
         bals2[t.substring(0, t.length-3)] += feesusd[t]
@@ -299,7 +299,7 @@ async function doPost(req, res) {
     for (var t in feeseth){
 
         bals2[t.substring(0, t.length-3)] += feeseth[t]
-    }
+    }*/
     let total22 = 0;
    let ethtotal2 = 0;
   let  btctotal2 = 0;
@@ -323,9 +323,12 @@ async function doPost(req, res) {
                }
     
     }
+
     let refdiff2= 100* (-1 * (1 - (btcs['BTC'] / btcref)));
     let usddiff2 = 100* (-1 * (1 - (total22 / usdstart)));
     btctotal2 = (((total22 / btcs['BTC'])));
+    btctotal2 = btctotal2 + (btcVol * 0.001)
+    total22 = btctotal2 * btcs['BTC']
     ethtotal2 = (((total22 / btcs2['ETH'])));
     let btcdiff2 = 100* (-1 * (1 - (btctotal2 / btcstart)));
     let ethdiff2 = 100* (-1 * (1 - (ethtotal2 / ethstart)));
@@ -337,7 +340,8 @@ async function doPost(req, res) {
             lll2 = adiff2[a]
         }
     }
-    let retdiff2 = lll2;
+    rdiff = refdiff;
+    let retdiff = lll2;
     console.log('total2 after: ' + total22)
     if (req.query.name) {
         res.json({
