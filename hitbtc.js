@@ -721,7 +721,7 @@ async function doit() {
                                     dontgo = true;
                                 }
                                 ////console.log(bp)
-                                if ((neversellataloss == true && sp > buyOs[symbol])){
+                                if ((neversellataloss == true && sp < buyOs[symbol])){
                                     dontbuy[symbol] = true;
                                 } 
                                 if (dontgo == false && sellQty > 0.00000001 && (neversellataloss == true && sp > buyOs[symbol])) {
@@ -909,7 +909,7 @@ async function doit() {
                                     ////console.log(buyQty)
                                     ////console.log(bp)
 
-                                if ((neversellataloss == true && sp > buyOs[symbol])){
+                                if ((neversellataloss == true && sp < buyOs[symbol])){
                                     dontbuy[symbol] = true;
                                 } 
                                     if (dontgo == false && sellQty > 0.00001 && (neversellataloss == true && sp > buyOs[symbol])) {
