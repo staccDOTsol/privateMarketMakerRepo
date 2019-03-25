@@ -682,7 +682,7 @@ async function doit() {
 
                     console.log(symbol + ' la: ' + la + ' hb: ' + hb)
                     console.log(aorders[symbol])
-                    if (symbol != 'BNBUSDS' && !notabuys.includes(symbol) && ((hblesss[symbol] != hbless || lalesss[symbol] != laless) || ((las[symbol] != la && hbs[symbol] != hb) && (aorders[symbol] != la && borders[symbol] != hb)))) {
+                    if (symbol != 'BNBUSDS' && ((hblesss[symbol] != hbless || lalesss[symbol] != laless) || ((las[symbol] != la && hbs[symbol] != hb) && (aorders[symbol] != la && borders[symbol] != hb)))) {
                         console.log(buyQtys[symbol] + ' ; ' + bsover);
                         if (buyQtys[symbol] * maxBetterVol < bsover || buyQtys[symbol] == undefined) {
                             hblesss[symbol] = hbless;
@@ -722,7 +722,7 @@ async function doit() {
                                 sp = sp.toFixed(filters[symbol].tickSize - 1)
                                 //buyQty = ((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * 1.0001) / Object.keys(gos[g]).length).toFixed(filters[symbol].stepSize - 1));
                                 //testing
-                                buyQty = ((bals[symbol.substring(symbol.length - 3, symbol.length)] * 0.99 / (hb * 1.0001) / Object.keys(gos[g]).length).toFixed(filters[symbol].stepSize - 1));
+                                buyQty = ((bals[symbol.substring(symbol.length - 3, symbol.length)] * 0.99 / (hb * 1.0001) / Object.keys(gos[g]).length / 1.5).toFixed(filters[symbol].stepSize - 1));
                                 console.log('buyQty: ' + buyQty)
                                 let dontgo = false;
                                 //console.log(buyQty)
