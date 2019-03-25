@@ -5,12 +5,13 @@ var PortfolioAnalytics = require('portfolio-analytics');
 let key = "d236e08c5eb56e8c33b6eb4708804aa8";
 let secret = "e9bc8024b9fae13f25f2947c1cbcb0e2";
 
-let targetSpread = 0.75;
-let targetVolDiv = 3;
+let targetSpread = 1.05;
+let targetVolDiv = 6;
 let targetVolMult = 350;
 let maxOrder = 1800000;
 let minOrder = 0;
 let maxBetterVol = 1.5;
+let neversellataloss = true;
 
 let returnPortfolio;
 let benchmark;
@@ -71,7 +72,7 @@ app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
 }));
 
 app.set('view engine', 'ejs');
-
+let buys = {}
 app.listen(process.env.PORT || 80, function() {});
 
 app.get('/update', (req, res) => {
@@ -90,9 +91,10 @@ app.post('/', (req, res) => {
 })
 let maxbal = 50;
 let total2 = 0;
-let btcstart = 0.01796093787524092;
-let ethstart = 0.5274891736811796;
-let usdstart = 71.65623930954617;
+let btcstart = 0.014390351200168254;
+let ethstart = 0.4236419852489839;
+let usdstart = 57.32511523396625;
+
 let btcref = 3987;
 let ethtotal = 0;
 let btctotal = 0;
@@ -325,11 +327,11 @@ async function doPost(req, res) {
     }
 
     let refdiff2= 100* (-1 * (1 - (btcs['BTC'] / btcref)));
-    let usddiff2 = 100* (-1 * (1 - (total22 / usdstart)));
     btctotal2 = (((total22 / btcs['BTC'])));
     btctotal2 = btctotal2 + (btcVol * 0.001)
     total22 = btctotal2 * btcs['BTC']
     ethtotal2 = (((total22 / btcs2['ETH'])));
+    let usddiff2 = 100* (-1 * (1 - (total22 / usdstart)));
     let btcdiff2 = 100* (-1 * (1 - (btctotal2 / btcstart)));
     let ethdiff2 = 100* (-1 * (1 - (ethtotal2 / ethstart)));
     let rdiff2 = refdiff2;
@@ -341,7 +343,7 @@ async function doPost(req, res) {
         }
     }
     rdiff = refdiff;
-    let retdiff = lll2;
+    retdiff = lll2;
     console.log('total2 after: ' + total22)
     if (req.query.name) {
         res.json({
@@ -716,7 +718,7 @@ async function doit() {
                                     dontgo = true;
                                 }
                                 ////console.log(bp)
-                                if (dontgo == false && sellQty > 0.00000001) {
+                                if (dontgo == false && sellQty > 0.00000001 && (neversellataloss == true && sp > buys[symbol])) {
 
                                     //lala++;
                                     try {
@@ -900,7 +902,7 @@ async function doit() {
                                     }
                                     ////console.log(buyQty)
                                     ////console.log(bp)
-                                    if (dontgo == false && sellQty > 0.00001) {
+                                    if (dontgo == false && sellQty > 0.00001 && (neversellataloss == true && sp > buys[symbol])) {
 
                                         //lala++;
                                         try {
@@ -1078,6 +1080,7 @@ if (true){
                                 }
                                 if (dontgo == false && buyQty > 0.00001) {
                                     renew[symbol] = false;
+                                    buys[symbol] = bp;
                                     //lala++;
                                     try {
                                         buyQtys[symbol] = buyQty;
