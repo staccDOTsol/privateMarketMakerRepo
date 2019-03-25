@@ -91,9 +91,10 @@ app.post('/', (req, res) => {
 })
 let maxbal = 50;
 let total2 = 0;
-let btcstart = 0.014390351200168254;
-let ethstart = 0.4236419852489839;
-let usdstart = 57.32511523396625;
+let btcstart = 0.014168187435742434;
+let ethstart = 0.42012825241522367;
+let usdstart =56.23962825305909;
+
 
 let btcref = 3987;
 let ethtotal = 0;
@@ -719,8 +720,11 @@ async function doit() {
                                     dontgo = true;
                                 }
                                 ////console.log(bp)
+                                if ((neversellataloss == true && sp > buyOs[symbol])){
+                                    dontbuy[symbol] = true;
+                                } 
                                 if (dontgo == false && sellQty > 0.00000001 && (neversellataloss == true && sp > buyOs[symbol])) {
-
+                                    dontbuy[symbol] = false;
                                     //lala++;
                                     try {
                                         /* buys.push(await client.order({
@@ -903,8 +907,12 @@ async function doit() {
                                     }
                                     ////console.log(buyQty)
                                     ////console.log(bp)
-                                    if (dontgo == false && sellQty > 0.00001 && (neversellataloss == true && sp > buyOs[symbol])) {
 
+                                if ((neversellataloss == true && sp > buyOs[symbol])){
+                                    dontbuy[symbol] = true;
+                                } 
+                                    if (dontgo == false && sellQty > 0.00001 && (neversellataloss == true && sp > buyOs[symbol])) {
+                                        dontbuy[symbol] = false;
                                         //lala++;
                                         try {
                                             /* buys.push(await client.order({
@@ -1079,7 +1087,7 @@ if (true){
                                     //console.log('dontgo minqty ' + symbol)
                                     dontgo = true;
                                 }
-                                if (dontgo == false && buyQty > 0.00001) {
+                                if (dontgo == false && buyQty > 0.00001 && ((neversellataloss == true && dontbuy[symbol] = false) || (dontbuy[symbol] == undefined))) {
                                     renew[symbol] = false;
                                     buyOs[symbol] = bp;
                                     //lala++;
