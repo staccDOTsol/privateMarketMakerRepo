@@ -10,7 +10,7 @@ let targetVolDiv = 5;
 let targetVolMult = 20;
 let maxOrder = 1500;
 let maxBetterVol = 1.5;
-
+let neversellataloss = true;
 
 const express = require('express');
 const app = express();
@@ -461,7 +461,7 @@ async function doit() {
                                     dontgo = true;
                                 }
                                 //console.log(bp)
-                                if (dontgo == false) {
+                                if (dontgo == false && (neversellataloss == true && sp > buyOs[symbol])) {
 
                                     //lala++;
                                     try {
@@ -607,7 +607,7 @@ async function doit() {
                                     }
                                     //console.log(buyQty)
                                     //console.log(bp)
-                                    if (dontgo == false) {
+                                    if (dontgo == false && (neversellataloss == true && sp > buyOs[symbol])) {
 
                                         //lala++;
                                         try {
@@ -745,7 +745,7 @@ async function doit() {
                                     dontgo = true;
                                 }
                                 if (dontgo == false && buyQty > 0.00001) {
-
+                                    buyOs[symbol] = bp;
                                     //lala++;
                                     try {
                                         buyQtys[symbol] = buyQty;
@@ -794,6 +794,7 @@ async function doit() {
         console.log(err);
     }
 }
+let buyOs = {}
 setInterval(function() {
     doit();
 }, 60000)

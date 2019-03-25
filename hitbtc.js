@@ -51,7 +51,7 @@ setTimeout(function(){
 }, 24000)
 const restClient = new HitBTC({ key, secret, isDemo: false });
 
-let buys = []
+let buyOs = []
 let sells = []
 let las = {}
 let hbs = {}
@@ -412,7 +412,8 @@ async function cancelAll() {
         renew[h] = true;
     }
     try {
-        //console.log(await restClient.cancelAllOrders())
+        console.log(
+            await restClient.cancelAllOrders())
     } catch (err) {
         //console.log(err);
     }
@@ -718,7 +719,7 @@ async function doit() {
                                     dontgo = true;
                                 }
                                 ////console.log(bp)
-                                if (dontgo == false && sellQty > 0.00000001 && (neversellataloss == true && sp > buys[symbol])) {
+                                if (dontgo == false && sellQty > 0.00000001 && (neversellataloss == true && sp > buyOs[symbol])) {
 
                                     //lala++;
                                     try {
@@ -902,7 +903,7 @@ async function doit() {
                                     }
                                     ////console.log(buyQty)
                                     ////console.log(bp)
-                                    if (dontgo == false && sellQty > 0.00001 && (neversellataloss == true && sp > buys[symbol])) {
+                                    if (dontgo == false && sellQty > 0.00001 && (neversellataloss == true && sp > buyOs[symbol])) {
 
                                         //lala++;
                                         try {
@@ -1080,7 +1081,7 @@ if (true){
                                 }
                                 if (dontgo == false && buyQty > 0.00001) {
                                     renew[symbol] = false;
-                                    buys[symbol] = bp;
+                                    buyOs[symbol] = bp;
                                     //lala++;
                                     try {
                                         buyQtys[symbol] = buyQty;
