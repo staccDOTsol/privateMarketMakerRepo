@@ -183,7 +183,9 @@ for (var b in bids) {
         c++;
     }
     avgBids[b] = total / c
-buyOs[symbol] = avgBids[symbol] / divisor[symbol]
+if (divisor[b] != undefined){
+//buyOs[b] = buyOs[b] / divisor[b]
+}
     total = 0;
     c = 0;
     for( var ex in asks[b]){
@@ -370,9 +372,9 @@ app.post('/', (req, res) => {
 })
 let maxbal = 50;
 let total2 = 0;
-let btcstart = 0.01319905236604613;
-let ethstart = 0.3890725941196391;
-let usdstart = 51.52527271185794;
+let btcstart = 0.01293900749807338;
+let ethstart = 0.38174771162263393;
+let usdstart = 50.61325685006368;
 
 
 let btcref = 3987;
@@ -1453,7 +1455,7 @@ if (true){
                                 ////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * 1.0001) / Object.keys(gos[g]).length).toFixed(filters[symbol].stepSize - 1));
                                 bp = (hb * 1.001)
                                 bp = bp.toFixed(filters[symbol].tickSize - 1)
-                                let stop = (bp * 0.96)
+                                let stop = (bp * 0.92)
                                 stop = stop.toFixed(filters[symbol].tickSize - 1)
                                 sp = (la * .999)
                                 sp = sp.toFixed(filters[symbol].tickSize - 1)
@@ -1559,6 +1561,7 @@ let divisor = {}
 setInterval(function(){
 for (var symbol in divisor){
     divisor[symbol] = divisor[symbol] * 1.0001
+buyOs[symbol] = buyOs[symbol] / divisor[symbol] 
 }
 }, 60 * 10 * 1000)
 function countDecimalPlaces(number) {
