@@ -17,9 +17,10 @@ let maxOrder = 1800000;
 let minOrder = 0;
 let maxBetterVol = 1.5;
 let neversellataloss = true;
-let stoploss = 0.92;
-let neversellatalossReductionIntervalMinutes = 10;
+let stoploss = 0.88;
+let neversellatalossReductionIntervalMinutes = 3;
 
+let msg;
 
 let returnPortfolio;
 let benchmark;
@@ -375,9 +376,9 @@ app.post('/', (req, res) => {
 })
 let maxbal = 50;
 let total2 = 0;
-let btcstart = 0.01293900749807338;
-let ethstart = 0.38174771162263393;
-let usdstart = 50.61325685006368;
+let btcstart = 0.012622664099266805;
+let ethstart = 0.3707343004362539;
+let usdstart = 49.52565372667828;
 
 
 let btcref = 3987;
@@ -658,7 +659,8 @@ async function doPost(req, res) {
             least: least,
             refdiff: refdiff,
             refdiff2: refdiff2,
-            sharpe: sharpe
+            sharpe: sharpe,
+            msg: msg
         });
 
     } else {
@@ -1010,6 +1012,7 @@ async function doit() {
                   price: bp,
                 })) */
                 //console.log('sellQty: ' + sellQty)
+                msg += symbol + ' market sell! @ ' + new Date().toString() + ' qty: ' + sellQty + '<br>';
                                         order = (await restClient.placeOrder({
                                             symbol: symbol,
                                             side: 'sell',

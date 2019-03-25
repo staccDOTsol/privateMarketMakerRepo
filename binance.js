@@ -18,9 +18,11 @@ let targetVolMult = 20;
 let maxOrder = 1500;
 let maxBetterVol = 1.5;
 let neversellataloss = true;
-let stoploss = 0.92;
+let stoploss = 0.88;
 let neversellatalossReductionIntervalMinutes = 10;
 
+
+let msg;
 
 let returnPortfolio;
 let benchmark;
