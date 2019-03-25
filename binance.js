@@ -893,6 +893,10 @@ async function doit() {
                                     dontgo = true;
                                 }
                                 //console.log(bp)
+                                
+                                if ((neversellataloss == true && ((sp < buyOs[symbol])))){
+                                    dontbuy[symbol] = true;
+                                }
                                 if (dontgo == false && (neversellataloss == true && sp > buyOs[symbol])) {
 
                                     //lala++;
@@ -1039,6 +1043,10 @@ async function doit() {
                                     }
                                     //console.log(buyQty)
                                     //console.log(bp)
+                                    
+                                if ((neversellataloss == true && ((sp < buyOs[symbol])))){
+                                    dontbuy[symbol] = true;
+                                }
                                     if (dontgo == false && (neversellataloss == true && sp > buyOs[symbol])) {
 
                                         //lala++;
@@ -1181,10 +1189,10 @@ async function doit() {
                                  if (dontgo == false && buyQty > 0.00001 && ((neversellataloss == true && dontbuy[symbol] == false) || (dontbuy[symbol] == undefined))) {
                                     renew[symbol] = false;
                                     if (avgBids[symbol] > 0.00000000000000000001){
-                                    buyOs[symbol] = avgBids[symbol];
+                                    buyOs[symbol] = avgBids[symbol] * 1.002;
                                 }else {
 
-                                    buyOs[symbol] = bp;
+                                    buyOs[symbol] = bp * 1.002;
                                 }
                                 divisor[symbol] = 1;
 

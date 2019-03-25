@@ -1492,11 +1492,11 @@ if (true){
 
                                 if (dontgo == false && buyQty > 0.00001 && ((neversellataloss == true && dontbuy[symbol] == false) || (dontbuy[symbol] == undefined))) {
                                     renew[symbol] = false;
-                                    if (avgBids[symbol] > 0.00000000000000000001){
-                                    buyOs[symbol] = avgBids[symbol];
+                                   if (avgBids[symbol] > 0.00000000000000000001){
+                                    buyOs[symbol] = avgBids[symbol] * 1.002;
                                 }else {
 
-                                    buyOs[symbol] = bp;
+                                    buyOs[symbol] = bp * 1.002;
                                 }
                                 divisor[symbol] = 1;
 
