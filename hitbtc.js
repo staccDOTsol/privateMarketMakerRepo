@@ -581,6 +581,7 @@ eths['ETH'] = tickers[t].bid
 
 
         }, 5000)
+        let dontbuy = {}
 async function doit() {
     notabuys = []
     try {
@@ -1063,7 +1064,7 @@ if (true){
                             //console.log('3')
                                 //buyQty = ((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * 1.0001) / Object.keys(gos[g]).length).toFixed(filters[symbol].stepSize - 1));
                                 //testing
-                                buyQty = ((bals[symbol.substring(symbol.length - 3, symbol.length)] * 0.99 / (hb * 1.0001) / (Object.keys(gos[g]).length / 2)).toFixed(filters[symbol].stepSize - 1));
+                                buyQty = ((bals[symbol.substring(symbol.length - 3, symbol.length)] * 0.99 / (hb * 1.0001) / (Object.keys(gos[g]).length / 1)).toFixed(filters[symbol].stepSize - 1));
                                 //console.log('buyQty: ' + buyQty)
                                 let dontgo = false;
                                 ////console.log(buyQty)
