@@ -2,8 +2,8 @@ const HitBTC = require('hitbtc-api').default
 var PortfolioAnalytics = require('portfolio-analytics');
 
 
-let key = "";
-let secret = "";
+let key = "d236e08c5eb56e8c33b6eb4708804aa8";
+let secret = "e9bc8024b9fae13f25f2947c1cbcb0e2";
 
 let targetSpread = 0.75;
 let targetVolDiv = 3;
@@ -72,7 +72,7 @@ app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
 
 app.set('view engine', 'ejs');
 
-app.listen(process.env.PORT || 8079, function() {});
+app.listen(process.env.PORT || 80, function() {});
 
 app.get('/update', (req, res) => {
 
@@ -90,10 +90,10 @@ app.post('/', (req, res) => {
 })
 let maxbal = 50;
 let total2 = 0;
-let btcstart = 0.01810541947013747;
-let ethstart = 0.53102375662021;
-let usdstart = 72.1863074274381;
-let btcref = 3992;
+let btcstart = 0.01808537448337168;
+let ethstart = 0.5310070633622895;
+let usdstart = 72.10385611277522;
+let btcref = 3987;
 let ethtotal = 0;
 let btctotal = 0;
 let trades2 = []
@@ -164,25 +164,33 @@ if (!tradeids.includes(trades[t].clientOrderId + trades[t].timestamp.toString())
             //if (trades[t].timestamp < least){
             //    least = trades[t].timestamp;
             //}
-            if (fees[trades[t].symbol] == undefined){
-                fees[trades[t].symbol] = 0
-            }
             if (trades[t].symbol.substring(trades[t].symbol.length - 3, trades[t].symbol.length) == 'USD'){
                 
-                btcVol += ((parseFloat(trades[t].fee) * btcs2['USD']) ) / .002
-                fees[trades[t].symbol] += (parseFloat(trades[t].fee) * btcs2['USD'])
-            }
-            else  if (trades[t].symbol.substring(trades[t].symbol.length - 3, trades[t].symbol.length) == 'ETH'){
-                //console.log('eth:' + btcs2['ETH'])
-                btcVol += (((parseFloat(trades[t].fee)) * btcs['ETH'])) / .002
-                fees[trades[t].symbol] +=parseFloat(trades[t].fee) * btcs['ETH']
-            }
-            else if (trades[t].symbol.substring(trades[t].symbol.length - 3, trades[t].symbol.length) == 'BTC'){
-                btcVol += ((parseFloat(trades[t].execPrice) * parseFloat(trades[t].execQuantity) * 2))
-                fees[trades[t].symbol] += parseFloat(trades[t].fee) * 2
+            if (feesusd[trades[t].symbol] == undefined){
+                feesusd[trades[t].symbol] = 0
             }
 
-        //console.log(btcVol)
+                btcVol += ((parseFloat(trades[t].fee) * btcs2['USD']) ) / .002
+                feesusd[trades[t].symbol] += (parseFloat(trades[t].fee) * 2 )/ parseFloat(trades[t].execPrice)
+            }
+            else  if (trades[t].symbol.substring(trades[t].symbol.length - 3, trades[t].symbol.length) == 'ETH'){
+               
+
+            if (feeseth[trades[t].symbol] == undefined){
+                feeseth[trades[t].symbol] = 0
+            }//console.log('eth:' + btcs2['ETH'])
+                btcVol += (((parseFloat(trades[t].fee)) * btcs['ETH'])) / .002
+                feeseth[trades[t].symbol] +=(parseFloat(trades[t].fee)* 2 ) / parseFloat(trades[t].execPrice)
+            }
+            else if (trades[t].symbol.substring(trades[t].symbol.length - 3, trades[t].symbol.length) == 'BTC'){
+             
+            if (feesbtc[trades[t].symbol] == undefined){
+                feesbtc[trades[t].symbol] = 0
+            }
+                btcVol += ((parseFloat(trades[t].execPrice) * parseFloat(trades[t].execQuantity) * 2))
+                feesbtc[trades[t].symbol] += (parseFloat(trades[t].fee) * 2) / parseFloat(trades[t].execPrice)
+            }
+        console.log('btcvol: ' + btcVol)
       
         }
     }
@@ -199,7 +207,9 @@ if (!tradeids.includes(trades[t].clientOrderId + trades[t].timestamp.toString())
 }
 let btcVol = 0;
 let numOrders = 0;
-let fees = {}
+let feesusd = {}
+let feeseth = {}
+let feesbtc = {}
 setTimeout(function(){
 
 getTrades();
@@ -229,12 +239,47 @@ async function doPost(req, res) {
     total2 = 0;
     let bals2 = {}
     balances = (await restClient.getMyBalance()).balance
+
     for (var b in balances) {
 
         bals2[b] = parseFloat(balances[b].cash) + parseFloat(balances[b].reserved)
     }
-    for (var t in fees){
-        bals2[t.substring(0, t.length-3)] += fees[t]
+
+    total2 = 0;
+    ethtotal = 0;
+    btctotal = 0;
+    ////console.log(bals2)
+    for (var bal in bals2){
+                    // //console.log(parseFloat(bals2[bal]))
+                    if (bals2[bal] > 0.00001){
+                 if (bal == 'USD'){
+                    total2 += parseFloat(bals2[bal])
+                }
+                else if (bal == 'BTC'){
+
+                    total2 += parseFloat(bals2[bal]) * parseFloat(btcs[bal])
+                }
+                else if (bal == 'ETH'){
+                    total2 += parseFloat(bals2[bal]) * parseFloat(btcs2[bal])
+
+                } else {
+                    total2 += parseFloat(bals2[bal]) * parseFloat(btcs2[bal])
+                }
+               }
+    
+    }
+    console.log('total2 before: ' + total2)
+    for (var t in feesusd){
+
+        bals2[t.substring(0, t.length-3)] += feesusd[t]
+    }
+    for (var t in feesbtc){
+
+        bals2[t.substring(0, t.length-3)] += feesbtc[t]
+    }
+    for (var t in feeseth){
+
+        bals2[t.substring(0, t.length-3)] += feeseth[t]
     }
     total2 = 0;
     ethtotal = 0;
@@ -259,6 +304,7 @@ async function doPost(req, res) {
                }
     
     }
+    console.log('total2 after: ' + total2)
         if (true){
             let refdiff = 100* (-1 * (1 - (btcs['BTC'] / btcref)));
     let usddiff = 100* (-1 * (1 - (total2 / usdstart)));
@@ -339,6 +385,7 @@ async function cancelAll() {
         //console.log(err);
     }
 }
+let usds = {}
 setTimeout(function(){
 cancelAll();
 orders();
@@ -455,6 +502,13 @@ if (!bases.includes(asset)) {
             if (asset == 'ROX'){
             }
             eths[asset] = parseFloat(tickers[t].bid)
+        }
+        } else   if (symbol.substring(symbol.length - 3, symbol.length) == 'USD') {
+                        asset = symbol.substring(0, symbol.length - 3)
+if (!bases.includes(asset)) {
+            if (asset == 'ROX'){
+            }
+            usds[asset] = parseFloat(tickers[t].bid)
         }
         }
          for (var b in bases) {
