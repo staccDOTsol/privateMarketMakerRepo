@@ -1058,7 +1058,11 @@ if (true){
                                 ////console.log(filters[symbol])
                                 ////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * 1.0001) / Object.keys(gos[g]).length).toFixed(filters[symbol].stepSize - 1));
                                 bp = (hb * 1.001)
+
                                 bp = bp.toFixed(filters[symbol].tickSize - 1)
+                                let stopp = bp * 0.95; 
+
+                                stopp = stopp.toFixed(filters[symbol].tickSize - 1)
                                 sp = (la * .999)
                                 sp = sp.toFixed(filters[symbol].tickSize - 1)
                             //console.log('3')
@@ -1100,6 +1104,8 @@ if (true){
                                         console.log(await restClient.placeOrder({
                                             symbol: symbol,
                                             side: 'buy',
+                                            type: 'stopLimit',
+                                            stopPrice: stopp,
                                             quantity: buyQty,
                                             price: bp,
                                         }))
