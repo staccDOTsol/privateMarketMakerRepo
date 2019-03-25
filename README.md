@@ -55,7 +55,7 @@ To use:
 5. Clone this repo, cd into directory
 
 
-6. Run npm i hitbtc-api express request ejs body-parser portfolio-analytics
+6. Run npm i hitbtc-api express request ejs body-parser portfolio-analytics moment bit_mex_api underscore dotenv socks-proxy-agent mongodb bitfinex-api-node binance-api-node system-sleep @okfe/okex-node
  
 
 7. Run node hitbtc.js
