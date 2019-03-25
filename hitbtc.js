@@ -370,9 +370,9 @@ app.post('/', (req, res) => {
 })
 let maxbal = 50;
 let total2 = 0;
-let btcstart = 0.013277452931741741;
-let ethstart = 0.39180735900316593;
-let usdstart =  52.10802790326705;
+let btcstart = 0.01319905236604613;
+let ethstart = 0.3890725941196391;
+let usdstart = 51.52527271185794;
 
 
 let btcref = 3987;
