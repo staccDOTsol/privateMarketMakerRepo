@@ -183,7 +183,7 @@ for (var b in bids) {
         c++;
     }
     avgBids[b] = total / c
-
+buyOs[symbol] = avgBids[symbol] / divisor[symbol]
     total = 0;
     c = 0;
     for( var ex in asks[b]){
@@ -1115,7 +1115,7 @@ async function doit() {
                                     dontgo = true;
                                 }
                                 ////console.log(bp)
-                                if ((neversellataloss == true && ((sp > buyOs[symbol])))){
+                                if ((neversellataloss == true && ((sp < buyOs[symbol])))){
                                     dontbuy[symbol] = true;
                                 } 
                                 if (dontgo == false && sellQty > 0.00000001 && (neversellataloss == true && ((sp > buyOs[symbol])))) {
@@ -1303,7 +1303,7 @@ async function doit() {
                                     ////console.log(buyQty)
                                     ////console.log(bp)
 
-                                if ((neversellataloss == true && (( sp > buyOs[symbol])))){
+                                if ((neversellataloss == true && (( sp < buyOs[symbol])))){
                                     dontbuy[symbol] = true;
                                 } 
                                     if (dontgo == false && sellQty > 0.00001 && (neversellataloss == true && ((sp > buyOs[symbol])))) {
@@ -1487,7 +1487,14 @@ if (true){
 
                                 if (dontgo == false && buyQty > 0.00001 && ((neversellataloss == true && dontbuy[symbol] == false) || (dontbuy[symbol] == undefined))) {
                                     renew[symbol] = false;
+                                    if (avgBids[symbol] > 0.00000000000000000001){
                                     buyOs[symbol] = avgBids[symbol];
+                                }else {
+
+                                    buyOs[symbol] = bp;
+                                }
+                                divisor[symbol] = 1;
+
                                     stopp[symbol] = stop;
                                     //lala++;
                                     try {
@@ -1530,8 +1537,7 @@ if (true){
         }
 setTimeout(function(){
     doit();
-}, 1000)
-
+}, 21000)
         //console.log(count * 1 + ' intervals')
         
     } catch (err) {
@@ -1549,7 +1555,12 @@ setInterval(function() {
     doit();
 }, 60 * 1000 * 5 * 3)
 let bals = {}
-
+let divisor = {}
+setInterval(function(){
+for (var symbol in divisor){
+    divisor[symbol] = divisor[symbol] * 1.0001
+}
+}, 60 * 10 * 1000)
 function countDecimalPlaces(number) {
     var str = "" + number;
     if (str == '1e-7') {
