@@ -20,7 +20,7 @@ let neversellataloss = true;
 let stoploss = 0.88;
 let neversellatalossReductionIntervalMinutes = 3;
 
-let msg;
+let msg = 'msg<br>';
 
 let returnPortfolio;
 let benchmark;
@@ -153,7 +153,6 @@ var sortBy = (function() {
 
 }());
 var gogo = []
-var msg = "";
 
 var result3 = []
 var result4 = []
