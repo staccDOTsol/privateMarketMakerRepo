@@ -1129,7 +1129,6 @@ async function doit() {
                  */
             }
         }
-       console.log(gos);
         //  }
         for (var g in gos) {
             for (var symbol in gos[g]) {
@@ -1162,12 +1161,12 @@ async function doit() {
                         }
                     }
 
-                    //console.log(symbol + ' la: ' + la + ' hb: ' + hb)
-                    //console.log(aorders[symbol])
-                    //console.log('renew: ' + renew[symbol])
+                    console.log(symbol + ' la: ' + la + ' hb: ' + hb)
+                    console.log(aorders[symbol])
+                    console.log('renew: ' + renew[symbol])
                     if (renew[symbol] == undefined || renew[symbol] == true || (symbol != 'BNBUSDS' && !notabuys.includes(symbol) && ((hblesss[symbol] != hbless || lalesss[symbol] != laless) || ((las[symbol] != la && hbs[symbol] != hb) && (aorders[symbol] != la && borders[symbol] != hb))))) {
 
-                        //console.log(buyQtys[symbol] + ' ; ' + bsover);
+                        console.log('buyqtys: ' + buyQtys[symbol] + ' ; ' + bsover);
                         if (buyQtys[symbol] * maxBetterVol < bsover || buyQtys[symbol] == undefined || Number.isNaN(bsover)) {
                             hblesss[symbol] = hbless;
                             lalesss[symbol] = laless;
@@ -1233,6 +1232,7 @@ async function doit() {
                                     dontgo = true;
                                 }
                                 console.log(symbol)
+                                console.log(dontgo)
                                 console.log(dontbuy[symbol])
                                 if (dontgo == false && buyQty > 0.00001 && ((neversellataloss == true && dontbuy[symbol] == false) || (dontbuy[symbol] == undefined))) {
                                     renew[symbol] = false;
