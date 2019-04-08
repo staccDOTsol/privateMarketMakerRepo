@@ -200,6 +200,7 @@
 <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
 <div id="msg"></div>
+<div id='tradeHistory'></div>
 The goal of this bot isn't to profit: it's to show off that there would be profits if we eliminated the 0.1% trading fee, or effect a market maker rebate of -0.01% or up to -0.1%. Imagine this chart as you're watching it without the steep climbs after some of the green (buying) lines: those drops are fees. Imagine it with bigger falls on some of the red (selling) lines: sales without fees. <a href="https://medium.com/@jarettrsdunn/binance-hitbtc-etc-market-maker-pitch-how-to-get-rich-online-2988c1d328ac">Read More Here.</a> <br> <br> # current orders: <div id = 'numOrders'></div> Buy orders: <div id = 'buyOrders'></div> Sell orders: <div id = 'sellOrders'></div>  <br> # recent trades: <div id = 'numTrades'></div><br>All balances: <div id = "balances"></div><br>Oldest trade in recent memory: <div id = 'least'></div> and btcVol in recent memory: <div id='btcVol'></div><br>Hours since oldest trade: <div id ='hours'></div><br>Est. daily vol: <div id="dailyvol"></div><br><br>Est. 1 BTC invested: <div id="1btc"></div>Est. 5 BTC invested: <div id="5btc"></div>Est. 10 BTC invested: <div id="10btc"></div>Est. 20 BTC invested: <div id="20btc"></div><br>Minutely Sharpe vs. hold BTC: <div id="sharpe"></div><br><br>sharpe and green line on chart, along with total usd eth btc are adjusted for 0.0% fees in recent memory.<br>
 
 <div id="container0" style="height: 500px; min-width: 310px"></div>
@@ -218,11 +219,11 @@ The goal of this bot isn't to profit: it's to show off that there would be profi
 		var total = []
         var eth = []
         var btc = []
+        var diffavg3 = []
+        var diffusd = []
         var diffeth = []
         var diffbtc = []
         var diffavg = []
-        var diffavg3 = []
-        var diffusd = []
         var refdiff = []
         setInterval(function() {
             //chart = Highcharts.stockChart('container', options);
@@ -235,6 +236,11 @@ The goal of this bot isn't to profit: it's to show off that there would be profi
             for (var b in jsondata.balances){
             $('#balances').append('<br>' + b + ": free: " + jsondata.balances[b] + " on orders: " + jsondata.balances2[b])
             }
+            $('#balances').append('<br><br>State of all pairs:')
+            for (var b in jsondata.stops){
+             $('#balances').append('<br>' + b + ': bid avg: ' + jsondata.bids[b] + ' stop: ' + jsondata.stops[b] + ' bought at (times fees, less divisor): ' + jsondata.buyOs[b] + ' divisor: ' + jsondata.divisor[b])
+            }
+            $('#balances').append('<br>')
             $('#least').html(new Date(jsondata.least))
             $('#buyOrders').html(jsondata.buyOrders)
             $('#sellOrders').html(jsondata.sellOrders)
@@ -270,7 +276,7 @@ lll2 = diffs2[d]
                 //chart0.series[0].setData(diffusd);
                 //chart0.series[1].setData(diffeth);
                 //chart0.series[2].setData(diffbtc);
-                chart0.series[4].setData(refdiff);
+                //chart0.series[4].setData(refdiff);
                 let avg2 = (jsondata.usddiff2 + jsondata.ethdiff2 + jsondata.btcdiff2) / 3
                 diffavg.push([d2, lll])
                 chart0.series[0].setData(diffavg);

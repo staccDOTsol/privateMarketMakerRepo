@@ -1,0 +1,252 @@
+var express = require('express')
+var app = express()
+var request = require("request")
+var bodyParser = require('body-parser')
+const axios = require('axios')
+var fs = require('fs');
+var key = fs.readFileSync('/etc/letsencrypt/live/techvoices.club/privkey.pem');
+var cert = fs.readFileSync( '/etc/letsencrypt/live/techvoices.club/fullchain.pem' );
+var ca = fs.readFileSync( '/etc/letsencrypt/live/techvoices.club/fullchain.pem' );
+var options = {
+  key: key,
+  cert: cert,
+  ca: ca
+};
+app.use(bodyParser.json()) // for parsing application/json
+app.use(
+  bodyParser.urlencoded({
+    extended: true
+  })
+) // for parsing application/x-www-form-urlencoded
+let servers = ['http://46.101.211.85', 'http://techvoices.club']
+let returns = {}
+let bnbs = {}
+let usds = {}
+let btcs = {}
+let returnsAdj = {}
+let bnbsAdj = {}
+let usdsAdj = {}
+let btcsAdj = {}
+let btcVol = {}
+let balances = {}
+let balances2 = {}
+let stops = {}
+let bids = {}
+let buyOs = {}
+let divisor = {}
+let text = ""
+async function repeat(){
+try {
+    text = ""
+bids = {}
+buyOs = {}
+divisor = {}
+    balances = {}
+returns = {}
+    balances2 = {}
+    stops = {}
+btcVol = {}
+bnbs = {}
+usds = {}
+ btcs = {}
+returnsAdj = {}
+bnbsAdj = {}
+ usdsAdj = {}
+ btcsAdj = {}
+ btcVol = {}
+    for (var server in servers){
+      let url = servers[server] + '/update?name=2'
+      request.get({url:url, json:true}, function (e, r, data) {
+
+        console.log(data)
+        console.log(e)
+        if (data){
+      returns[servers[server]] = (data.btcdiff + data.bnbdiff + data.usddiff) / 3
+      bnbs[servers[server]] = data.bnbdiff
+      usds[servers[server]] = data.usddiff
+      stops[servers[server]] = data.stops
+      bids[servers[server]] = data.bids
+      buyOs[servers[server]] = data.buyOs
+      divisor[servers[server]] = data.divisor
+      balances[servers[server]] = data.balances
+      balances2[servers[server]] = data.balances2
+      btcs[servers[server]] = data.btcdiff
+      returnsAdj[servers[server]] = (data.btcdiff2 + data.bnbdiff2 + data.usddiff2) / 3
+      bnbsAdj[servers[server]] = data.bnbdiff2
+      usdsAdj[servers[server]] = data.usddiff2
+      
+      btcsAdj[servers[server]] = data.btcdiff2
+      btcVol[servers[server]] = data.btcVol
+      try {
+      text += servers[server] + ": \n\n"
+      text += "avg returns: " + returns[servers[server]].toFixed(4) + "%\n"
+      text += "btc returns: " + btcs[servers[server]].toFixed(4) + "%\n"
+      text += "bnb returns: " + bnbs[servers[server]].toFixed(4) + "%\n"
+      text += "usd returns: " + usds[servers[server]].toFixed(4) + "%\n\n"
+      text += "adj. avg returns: " + returnsAdj[servers[server]].toFixed(4) + "%\n"
+      text += "adj. btc returns: " + btcsAdj[servers[server]].toFixed(4) + "%\n"
+      text += "adj. bnb returns: " + bnbsAdj[servers[server]].toFixed(4) + "%\n"
+      text += "adj. usd returns: " + usdsAdj[servers[server]].toFixed(4) + "%\n\n"
+      text += "btcVol since 24 hours before run til now: " + btcVol[servers[server]] + "\n\n\n"
+  } catch (err){
+
+  }    
+    }
+    })
+    }
+}catch (err){
+console.log(err);
+}
+}
+setInterval(function(){
+repeat()
+  }, 60000)
+setTimeout(function(){
+repeat()
+}, 1000);
+//This is the route the API will call
+app.post('/new-message', function(req, res) {
+  try {
+  const { message } = req.body
+if (message){
+  //Each message contains "text" and a "chat" object, which has an "id" which is the chat id
+if (message.text){
+  console.log(message.text)
+}
+  if (message.text && message.text.startsWith('returns')) {
+    // In case a message is not present, or if our message does not have the word marco in it, do nothing and return an empty response
+    doReturns(message.chat.id, res)
+  }
+  else if (message.text && message.text.startsWith('balances')) {
+    // In case a message is not present, or if our message does not have the word marco in it, do nothing and return an empty response
+    doBalances(message.chat.id, res)
+  }
+  else if (message.text && message.text.startsWith('state')) {
+    // In case a message is not present, or if our message does not have the word marco in it, do nothing and return an empty response
+    doState(message.chat.id, res)
+  }
+else {
+  return res.end()
+}
+}
+}catch(err){
+  console.log(err);
+}
+
+  // If we've gotten this far, it means that we have received a message containing the word "marco".
+  // Respond by hitting the telegram bot API and responding to the approprite chat_id with the word "Polo!!"
+  // Remember to use your own API toked instead of the one below  "https://api.telegram.org/bot<your_api_token>/sendMessage"
+  
+})
+async function doState(chatid, res){
+try { 
+ let tosend = ""
+  for (var server in servers){
+    tosend += servers[server] + "\n"
+    for (var b in stops[servers[server]]){
+   tosend+=('\n' + b + ': bid avg: ' + bids[servers[server]][b] + ' stop: ' + stops[servers[server]][b] + ' bought at (times fees, less divisor): ' + buyOs[servers[server]][b] + ' divisor: ' + divisor[servers[server]][b])
+  }
+}
+
+  axios
+    .post(
+      'https://api.telegram.org/bot845625314:AAH26BmZDODxdOsusTiBUBog-GKQdS_MRcc/sendMessage',
+      {
+        chat_id: chatid,
+        text: tosend
+      }
+    )
+    .then(response => {
+      // We get here if the message was successfully posted
+      console.log('Message posted')
+      res.end('ok')
+    })
+    .catch(err => {
+      // ...and here if it was not
+      console.log('Error :', err)
+      res.end('Error :' + err)
+    })
+} catch (err) {
+console.log(err);
+}
+}
+async function doBalances(chatid, res ){
+try { 
+ let tosend = ""
+  for (var server in servers){
+    tosend += servers[server] + "\n"
+  for (var b in balances[servers[server]]){
+  tosend+=('\n' + b + ": free: " + balances[servers[server]][b] + " on orders: " + balances2[servers[server]][b])
+  }
+  
+  axios
+    .post(
+      'https://api.telegram.org/bot845625314:AAH26BmZDODxdOsusTiBUBog-GKQdS_MRcc/sendMessage',
+      {
+        chat_id: chatid,
+        text: tosend
+      }
+    )
+    .then(response => {
+      // We get here if the message was successfully posted
+      console.log('Message posted')
+      res.end('ok')
+    })
+    .catch(err => {
+      // ...and here if it was not
+      console.log('Error :', err)
+      res.end('Error :' + err)
+    })
+}
+
+  axios
+    .post(
+      'https://api.telegram.org/bot845625314:AAH26BmZDODxdOsusTiBUBog-GKQdS_MRcc/sendMessage',
+      {
+        chat_id: chatid,
+        text: tosend
+      }
+    )
+    .then(response => {
+      // We get here if the message was successfully posted
+      console.log('Message posted')
+      res.end('ok')
+    })
+    .catch(err => {
+      // ...and here if it was not
+      console.log('Error :', err)
+      res.end('Error :' + err)
+    })
+}
+catch (err){
+console.log(err);
+}
+}
+async function doReturns(chatid, res){
+try {
+  axios
+    .post(
+      'https://api.telegram.org/bot845625314:AAH26BmZDODxdOsusTiBUBog-GKQdS_MRcc/sendMessage',
+      {
+        chat_id: chatid,
+        text: text
+      }
+    )
+    .then(response => {
+      // We get here if the message was successfully posted
+      console.log('Message posted')
+      res.end('ok')
+    })
+    .catch(err => {
+      // ...and here if it was not
+      console.log('Error :', err)
+      res.end('Error :' + err)
+    })
+}
+catch (err){
+csonsole.log(err);
+}
+}
+// Finally, start our server
+var https = require('https');
+https.createServer(options, app).listen(443);

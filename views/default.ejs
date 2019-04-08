@@ -200,7 +200,7 @@
 <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
 
-<div id="container0" style="height: 500px; min-width: 310px"></div>
+<div id="container0" style="height: 500px; min-width: 310px"></div><div id="pnl"></div>
 <div id="profits"></div>
 <div id="msg"></div>
 The goal of this bot isn't to profit: it's to show off that there would be profits if we reduced the 0.1% trading fee to 0.02%. Imagine this chart as you're watching it without the steep climbs after some of the green (buying) lines: those drops are fees. Imagine it with bigger falls on some of the red (selling) lines: sales without fees. <a href="https://medium.com/@jarettrsdunn/binance-hitbtc-etc-market-maker-pitch-how-to-get-rich-online-2988c1d328ac">Read More Here.</a> <br> <br> # current orders: <div id = 'numOrders'></div> Buy orders: <div id = 'buyOrders'></div> Sell orders: <div id = 'sellOrders'></div>  <br> # recent trades: <div id = 'numTrades'></div><br>All balances: <div id = "balances"></div><br>Starttime: <div id = 'least'></div> and btcVol in recent memory: <div id='btcVol'></div><br>Hours since starttime: <div id ='hours'></div><br>Est. daily vol: <div id="dailyvol"></div><br><br>Est. 1 BTC invested: <div id="1btc"></div>Est. 5 BTC invested: <div id="5btc"></div>Est. 10 BTC invested: <div id="10btc"></div>Est. 20 BTC invested: <div id="20btc"></div><br>Minutely Sharpe vs. hold BTC: <div id="sharpe"></div><br><br>sharpe and green line on chart, along with total usd bnb btc are adjusted for 0.02% fees in recent memory.<br>
@@ -213,7 +213,7 @@ The goal of this bot isn't to profit: it's to show off that there would be profi
 
     var prices = [];
     var rois = [];
-    var lasks = []; 
+    var lasks = [];
     $(document).ready(function() {
         console.log("ready!");
         setInterval(function() {
@@ -223,17 +223,17 @@ The goal of this bot isn't to profit: it's to show off that there would be profi
     });
 
         var total = []
-        var bnb = []
+        var alt = []
         var btc = []
         var diffavg3 = []
         var diffusd = []
-        var diffbnb = []
+        var diffalt = []
         var diffbtc = []
         var diffavg = []
         var refdiff = []
     function doit(){
      //chart = Highcharts.stockChart('container', options);
-            $.getJSON('http://<%- url %>/update?name=2', function(jsondata) {
+            $.getJSON('/update?name=2', function(jsondata) {
 
                 for (var p in jsondata.trades2){
                     if (jsondata.trades2[p].isBuyer){
@@ -328,38 +328,41 @@ The goal of this bot isn't to profit: it's to show off that there would be profi
                 var d2 = new Date().getTime();
                 total.push([d2, jsondata.total]);
                 btc.push([d2, jsondata.btc])
-                bnb.push([d2, jsondata.bnb])
+                alt.push([d2, jsondata.alt])
                 diffusd.push([d2, jsondata.usddiff2])
-                diffbnb.push([d2, jsondata.bnbdiff2])
+                diffalt.push([d2, jsondata.altdiff2])
                 diffbtc.push([d2, jsondata.btcdiff2])
-let diffs = [jsondata.usddiff2, jsondata.bnbdiff2, jsondata.btcdiff2]
+let diffs = [jsondata.usddiff2, jsondata.altdiff2, jsondata.btcdiff2]
 let lll = -99999
 for (var d in diffs){
-if (diffs[d] > lll){
+if (diffs[d] && diffs[d] > lll && diffs[d] > -100){
 lll = diffs[d]
-
+console.log('lll ' + lll)
 }
 }
-let diffs2 = [jsondata.usddiff, jsondata.bnbdiff, jsondata.btcdiff]
+let diffs2 = [jsondata.usddiff, jsondata.altdiff, jsondata.btcdiff]
 let lll2 = -99999
-for (var d in diffs2){
-if (diffs2[d] > lll2){
+for (var d in diffs2 ){
+if (diffs2[d] > lll2 &&diffs2[d] && diffs2[d] > -100){
 lll2 = diffs2[d]
 
 }
 }
+console.log('lll: ' + lll)
                 refdiff.push([d2, jsondata.refdiff2])
                 chart2.series[0].setData(btc);
-                chart3.series[0].setData(bnb);
+                chart3.series[0].setData(alt);
                 chart.series[0].setData(total);
                 //chart0.series[0].setData(diffusd);
-                //chart0.series[1].setData(diffbnb);
+                //chart0.series[1].setData(diffalt);
                 //chart0.series[2].setData(diffbtc);
                 //chart0.series[4].setData(refdiff);
-                let avg2 = (jsondata.usddiff2 + jsondata.bnbdiff2 + jsondata.btcdiff2) / 3
+                let avg2 = (jsondata.usddiff2 + jsondata.altdiff2 + jsondata.btcdiff2) / 3
                 diffavg.push([d2, lll])
                 chart0.series[0].setData(diffavg);
-                let avg3 = (jsondata.usddiff + jsondata.bnbdiff + jsondata.btcdiff) / 3
+	
+
+                let avg3 = (jsondata.usddiff + jsondata.altdiff + jsondata.btcdiff) / 3
                 diffavg3.push([d2, lll2])
                 chart0.series[1].setData(diffavg3);
                 console.log('trade')
@@ -370,11 +373,16 @@ if (jsondata.trades2[p].time < max){
 }
 
 }
-max = jsondata.least
+
+
+        let hours2 = (new Date().getTime() - jsondata.least - 86400000) / 1000 / 60 / 60
+        let hours = (new Date().getTime() - max) / 1000 / 60 / 60
+console.log('hours: ' + hours2)	
+$('#pnl').html('Pnl per hour: ' + ((lll) / hours2) + ' per day: ' + (((lll) / hours2) * 24))
             $('#least').html(new Date(jsondata.least))
 
             $('#hours').html((new Date().getTime() - max) / 1000 / 60 / 60)
-        let hours = (new Date().getTime() - max) / 1000 / 60 / 60
+
 console.log(hours)
 let div = 24 / hours
 console.log('div:' + div)
@@ -760,7 +768,7 @@ console.log(max )
             split: true
         },
         series: [{
-                name: 'bnb total',
+                name: 'alt total',
                 data: trade,
                 color: '#00FF00'
             }

@@ -1,0 +1,24 @@
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  
+</head><body>
+
+You have <%- credits %> credits and running these ips: <div id = "ips"></div>
+
+
+<% for(var i=0; i < ips.length - 1; i++) { %>
+<form action="/delete" method="POST" id="form">
+     <a href="http://<%= ips[i] %>"><%= names[i] %></a> <a href="#" onclick="delete2('<%= names[i] %>')">Delete instance?</a><br>
+   <input type='hidden' name='name' id='name'><input type='hidden' name='current_user_id' id='user_id'></input></form>
+<% } %>
+
+<script>
+  function delete2(name){
+    $('#user_id').val('<%- current_user_id %>')
+    $('#name').val(name)
+    $('#form').submit()
+  }
+</script>
+
+</body>
