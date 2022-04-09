@@ -20,7 +20,7 @@
     "express": "^4.16.4",
     "googleapis": "^39.2.0",
     "hitbtc-api": "^3.0.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "mongodb": "^3.2.3",
     "node-coinigy": "^2.0.1",
     "node-okex-ws-spot": "^1.1.4",
